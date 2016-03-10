@@ -54,7 +54,23 @@ public class EscolaDAO {
 		} catch (SQLException sqlException) {
 			System.err.println(sqlException + "Erro ao remover a Escola do banco de dados.");
 		}
-		
+	}
+	
+	public Escola getLastEscola() {
+		Escola escola = new Escola();
+		try {
+			String sql = "SELECT idEscola,nome FROM `Merenda`.`Escola` ORDER BY idEscola DESC LIMIT 1";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				escola.setIdEscola(rs.getInt("idEscola"));
+				escola.setNome(rs.getString("nome"));
+			}
+//			System.out.println("ID GAME = " + game.getIdGame());
+		} catch(SQLException sqlException) {
+			System.err.println(sqlException + "erro ao pegar o ultimo!");
+		}
+		return escola;
 	}
 	
 }

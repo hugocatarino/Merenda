@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Remessa` (
   quantidade INTEGER UNSIGNED NULL,
   falta INTEGER UNSIGNED NULL,
   recebido FLOAT NULL,
-  date DATE NULL,
+  date VARCHAR(10) NULL,
   PRIMARY KEY(idRemessa),
   INDEX Remessa_FKIndex1(Escola_idEscola)
 )ENGINE = InnoDB;

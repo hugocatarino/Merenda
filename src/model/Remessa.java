@@ -4,19 +4,26 @@ import java.sql.Date;
 
 public class Remessa {
 	private int idRemessa;
+	private int idEscola;
 	private String nomeAlimento;
 	private int tipo;
 	private float peso_liq;
 	private int quantidade;
 	private int falta;
 	private float recebido;
-	private Date date;
+	private String date;
 
 	public int getIdRemessa() {
 		return idRemessa;
 	}
 	public void setIdRemessa(int idRemessa) {
 		this.idRemessa = idRemessa;
+	}
+	public int getIdEscola() {
+		return idEscola;
+	}
+	public void setIdEscola(int idEscola) {
+		this.idEscola = idEscola;
 	}
 	public String getNomeAlimento() {
 		return nomeAlimento;
@@ -54,10 +61,10 @@ public class Remessa {
 	public void setRecebido(float recebido) {
 		this.recebido = recebido;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 }

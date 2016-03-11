@@ -24,14 +24,40 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Escola` (
 CREATE TABLE IF NOT EXISTS `Merenda`.`Remessa` (
   idRemessa INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   Escola_idEscola INTEGER UNSIGNED NOT NULL,
-  nome_Alimento VARCHAR(20) NULL,
-  tipo INTEGER UNSIGNED NULL,
-  peso_liq FLOAT NULL,
-  quantidade INTEGER UNSIGNED NULL,
-  falta INTEGER UNSIGNED NULL,
-  recebido FLOAT NULL,
+  nome VARCHAR(25) NULL,
   date VARCHAR(10) NULL,
   PRIMARY KEY(idRemessa),
   INDEX Remessa_FKIndex1(Escola_idEscola)
 )ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `Merenda`.`Alimento`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
+  idAlimento INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Remessa_idRemessa INTEGER UNSIGNED NOT NULL,
+  nome VARCHAR(20) NULL,
+  tipo INTEGER UNSIGNED NULL,
+  peso_liq FLOAT NULL,
+  quantidade INTEGER UNSIGNED NULL,
+  falta INTEGER UNSIGNED NULL,
+  recebido FLOAT NULL,
+  PRIMARY KEY(idAlimento),
+  INDEX Alimento_FKIndex1(Remessa_idRemessa)
+)ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Merenda`.`Mapa_Merenda`
+-- -----------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS `Merenda`.`Mapa_Merenda` (
+  idMapa_Merenda INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Remessa_idRemessa INTEGER UNSIGNED NOT NULL,
+  cardapio VARCHAR(40) NULL,
+  turno VARCHAR(10) NULL,
+  numero_Alunos INTEGER UNSIGNED NULL,
+  date VARCHAR(10) NULL,
+  PRIMARY KEY(idMapa_Merenda),
+  INDEX Mapa_Merenda_FKIndex1(Remessa_idRemessa)
+)ENGINE = InnoDB;

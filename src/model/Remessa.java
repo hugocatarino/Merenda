@@ -1,16 +1,9 @@
 package model;
 
-import java.sql.Date;
-
 public class Remessa {
 	private int idRemessa;
 	private int idEscola;
-	private String nomeAlimento;
-	private int tipo;
-	private float peso_liq;
-	private int quantidade;
-	private int falta;
-	private float recebido;
+	private String nome;
 	private String date;
 
 	public int getIdRemessa() {
@@ -25,41 +18,11 @@ public class Remessa {
 	public void setIdEscola(int idEscola) {
 		this.idEscola = idEscola;
 	}
-	public String getNomeAlimento() {
-		return nomeAlimento;
+	public String getNome() {
+		return nome;
 	}
-	public void setNomeAlimento(String nomeAlimento) {
-		this.nomeAlimento = nomeAlimento;
-	}
-	public int getTipo() {
-		return tipo;
-	}
-	public void setTipo(int tipo) {
-		this.tipo = tipo;
-	}
-	public float getPeso_liq() {
-		return peso_liq;
-	}
-	public void setPeso_liq(float peso_liq) {
-		this.peso_liq = peso_liq;
-	}
-	public int getQuantidade() {
-		return quantidade;
-	}
-	public void setQuantidade(int quantidade) {
-		this.quantidade = quantidade;
-	}
-	public int getFalta() {
-		return falta;
-	}
-	public void setFalta(int falta) {
-		this.falta = falta;
-	}
-	public float getRecebido() {
-		return recebido;
-	}
-	public void setRecebido(float recebido) {
-		this.recebido = recebido;
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 	public String getDate() {
 		return date;
@@ -67,4 +30,6 @@ public class Remessa {
 	public void setDate(String date) {
 		this.date = date;
 	}
+
+
 }

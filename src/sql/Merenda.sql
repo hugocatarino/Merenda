@@ -61,3 +61,16 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Mapa_Merenda` (
   PRIMARY KEY(idMapa_Merenda),
   INDEX Mapa_Merenda_FKIndex1(Remessa_idRemessa)
 )ENGINE = InnoDB;
+
+-- -----------------------------------------------------
+-- Table `Merenda`.`Gasto`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `Merenda`.`Gasto` (
+  idGasto INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  Mapa_Merenda_idMapa_Merenda INTEGER UNSIGNED NOT NULL,
+  Alimento_idAlimento INTEGER UNSIGNED NOT NULL,
+  peso FLOAT NULL,
+  PRIMARY KEY(idGasto),
+  INDEX Gasto_FKIndex1(Alimento_idAlimento),
+  INDEX Gasto_FKIndex2(Mapa_Merenda_idMapa_Merenda)
+)ENGINE = InnoDB;

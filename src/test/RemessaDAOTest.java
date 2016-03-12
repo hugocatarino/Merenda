@@ -35,27 +35,5 @@ public class RemessaDAOTest {
 		dao.removeRemessa(id);
 		Assert.assertNotEquals(id, dao.getLastRemessa().getIdRemessa());
 	}
-	/*
-	@Test
-	public void testAdicionaRemessa() {
-		remessa.setNomeAlimento("Açafrão");
-		remessa.setIdRemessa(5);
-		remessa.setIdEscola(1);
-		remessa.setTipo(2);
-		remessa.setPeso_liq(100);
-		remessa.setQuantidade(03);
-		remessa.setFalta(2);
-		remessa.setRecebido(300);
-		remessa.setDate("01/03/2016");
-		dao.adicionaRemessa(remessa);
-		Assert.assertEquals(remessa.getIdRemessa(), dao.getLastRemessa().getIdRemessa());
-	}
-
-	@Test
-	public void testRemoveRemessa() {
-		remessa = dao.getLastRemessa();
-		dao.removeRemessa(remessa.getIdRemessa());
-		Assert.assertNotEquals(dao.getLastRemessa(), remessa);
-	}
-	*/
+	
 }

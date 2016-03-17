@@ -25,7 +25,7 @@ public class AlimentoDAO {
 			stmt.setInt(2, alimento.getIdRemessa());
 			stmt.setInt(3, alimento.getTipo());
 			stmt.setFloat(4, alimento.getPeso_liq());
-			stmt.setInt(5, alimento.getQuantidade());
+			stmt.setFloat(5, alimento.getQuantidade());
 			stmt.setInt(6, alimento.getFalta());
 			stmt.setFloat(7, alimento.getRecebido());
 			stmt.execute();
@@ -59,6 +59,48 @@ public class AlimentoDAO {
 		}
 	}
 	
+	public Alimento buscaAlimento(int idAlimento) {
+		Alimento alimento = new Alimento();
+		try {
+			String sql = "SELECT idAlimento, nome, Remessa_idRemessa, tipo, peso_liq, quantidade, "
+					+ "falta, recebido FROM `Merenda`.`Alimento` WHERE idAlimento = ?";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+			stmt.setInt(1, idAlimento);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				alimento.setIdAlimento(rs.getInt("idAlimento"));
+				alimento.setNome(rs.getString("nome"));
+				alimento.setIdRemessa(rs.getInt("Remessa_idRemessa"));
+				alimento.setTipo(rs.getInt("tipo"));
+				alimento.setQuantidade(rs.getFloat("quantidade"));
+				alimento.setPeso_liq(rs.getFloat("peso_liq"));
+				alimento.setFalta(rs.getInt("falta"));
+				alimento.setRecebido(rs.getFloat("recebido"));
+			}
+		}catch (SQLException sqlException) {
+			System.err.println(sqlException + "Erro ao BUSCAR alimento!");
+		}
+		return alimento;
+	}
+	
+	public void modificaCusto(int idAlimento, float custo) {
+		try {
+			
+			Alimento alimento = buscaAlimento(idAlimento);
+			if(alimento != null) {
+				float novo = alimento.getQuantidade() - (custo/alimento.getPeso_liq());
+				String sql = "UPDATE `Merenda`.`Alimento` SET quantidade = ? WHERE idAlimento = ?";
+				PreparedStatement stmt = this.conexao.prepareStatement(sql);
+				stmt.setFloat(1, novo);
+				stmt.setInt(2, idAlimento);
+				stmt.execute();
+				stmt.close();
+			}
+		}catch (SQLException sqlException) {
+			System.err.println(sqlException + "Erro ao modificar o custo!");
+		}
+	}
+	
 	public Alimento getLastAlimento() {
 		Alimento alimento = new Alimento();
 		try {
@@ -78,7 +120,6 @@ public class AlimentoDAO {
 			}
 			rs.close();
 			stmt.close();
-//			System.out.println("ID GAME = " + game.getIdGame());
 		} catch(SQLException sqlException) {
 			System.err.println(sqlException + "erro ao pegar o ultimo!");
 		}

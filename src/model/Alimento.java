@@ -6,7 +6,7 @@ public class Alimento {
 	private String nome;
 	private int tipo;
 	private float peso_liq;
-	private int quantidade;
+	private float quantidade;
 	private int falta;
 	private float recebido;
 
@@ -40,10 +40,10 @@ public class Alimento {
 	public void setPeso_liq(float peso_liq) {
 		this.peso_liq = peso_liq;
 	}
-	public int getQuantidade() {
+	public float getQuantidade() {
 		return quantidade;
 	}
-	public void setQuantidade(int quantidade) {
+	public void setQuantidade(float quantidade) {
 		this.quantidade = quantidade;
 	}
 	public int getFalta() {

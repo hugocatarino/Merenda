@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
   nome VARCHAR(20) NULL,
   tipo INTEGER UNSIGNED NULL,
   peso_liq FLOAT NULL,
-  quantidade INTEGER UNSIGNED NULL,
+  quantidade FLOAT NULL,
   falta INTEGER UNSIGNED NULL,
   recebido FLOAT NULL,
   PRIMARY KEY(idAlimento),

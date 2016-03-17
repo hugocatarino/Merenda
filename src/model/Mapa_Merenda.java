@@ -2,7 +2,7 @@ package model;
 
 public class Mapa_Merenda {
 	private int idMapa_Merenda;
-	private int Remessa_idRemessa;
+	private int idEstoque;
 	private String cardapio;
 	private String turno;
 	private int numero_Aluno;
@@ -14,11 +14,11 @@ public class Mapa_Merenda {
 	public void setIdMapa_Merenda(int idMapa_Merenda) {
 		this.idMapa_Merenda = idMapa_Merenda;
 	}
-	public int getRemessa_idRemessa() {
-		return Remessa_idRemessa;
+	public int getIdEstoque() {
+		return idEstoque;
 	}
-	public void setRemessa_idRemessa(int remessa_idRemessa) {
-		Remessa_idRemessa = remessa_idRemessa;
+	public void setIdEstoque(int idEstoque) {
+		this.idEstoque = idEstoque;
 	}
 	public String getCardapio() {
 		return cardapio;

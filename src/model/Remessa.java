@@ -2,7 +2,7 @@ package model;
 
 public class Remessa {
 	private int idRemessa;
-	private int idEscola;
+	private int idEstoque;
 	private String nome;
 	private String date;
 
@@ -12,11 +12,11 @@ public class Remessa {
 	public void setIdRemessa(int idRemessa) {
 		this.idRemessa = idRemessa;
 	}
-	public int getIdEscola() {
-		return idEscola;
+	public int getIdEstoque() {
+		return idEstoque;
 	}
-	public void setIdEscola(int idEscola) {
-		this.idEscola = idEscola;
+	public void setIdEstoque(int idEstoque) {
+		this.idEstoque = idEstoque;
 	}
 	public String getNome() {
 		return nome;

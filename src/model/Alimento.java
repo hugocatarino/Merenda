@@ -2,7 +2,7 @@ package model;
 
 public class Alimento {
 	private int idAlimento;
-	private int idRemessa;
+	private int idEstoque;
 	private String nome;
 	private int tipo;
 	private float peso_liq;
@@ -16,11 +16,11 @@ public class Alimento {
 	public void setIdAlimento(int idAlimento) {
 		this.idAlimento = idAlimento;
 	}
-	public int getIdRemessa() {
-		return idRemessa;
+	public int getIdEstoque() {
+		return idEstoque;
 	}
-	public void setIdRemessa(int idRemessa) {
-		this.idRemessa = idRemessa;
+	public void setIdEstoque(int idEstoque) {
+		this.idEstoque = idEstoque;
 	}
 	public String getNome() {
 		return nome;

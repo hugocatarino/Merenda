@@ -18,7 +18,7 @@ public class RemessaDAOTest {
 	
 	@Test
 	public void testAdicionaRemessa() {
-		remessa.setIdEscola(1);
+		remessa.setIdEstoque(1);
 		remessa.setNome("infantil");
 		remessa.setDate("01/03/2016");
 		//Remessa teste = dao.getLastRemessa();

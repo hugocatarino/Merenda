@@ -16,12 +16,12 @@ public class Mapa_MerendaDAO {
 
 	public void adicionaMapa_Merenda(Mapa_Merenda mapa) {
 		try {
-			String sql = "INSERT INTO `Merenda`.`Mapa_Merenda` (Remessa_idRemessa, cardapio, turno, "
+			String sql = "INSERT INTO `Merenda`.`Mapa_Merenda` (Estoque_idEstoque, cardapio, turno, "
 					+ "numero_Alunos, date) VALUES (?, ?, ?, ?, ?)";
 			String sql2 = "SELECT idMapa_Merenda FROM `Merenda`.`Mapa_Merenda` ORDER BY idMapa_Merenda DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			PreparedStatement stmt2 = this.conexao.prepareStatement(sql2);
-			stmt.setInt(1, mapa.getRemessa_idRemessa());
+			stmt.setInt(1, mapa.getIdEstoque());
 			stmt.setString(2, mapa.getCardapio());
 			stmt.setString(3, mapa.getTurno());
 			stmt.setInt(4, mapa.getNumero_Aluno());
@@ -62,14 +62,14 @@ public class Mapa_MerendaDAO {
 	public Mapa_Merenda getLastMapa_Merenda() {
 		Mapa_Merenda mapa = new Mapa_Merenda();
 		try {
-			String sql = "SELECT idMapa_Merenda, Remessa_idRemessa, cardapio, turno, "
+			String sql = "SELECT idMapa_Merenda, Estoque_idEstoque, cardapio, turno, "
 					+ "numero_Alunos, date FROM `Merenda`.`Mapa_Merenda`"
 					+ "ORDER BY idMapa_Merenda DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
 				mapa.setIdMapa_Merenda(rs.getInt("idMapa_Merenda"));
-				mapa.setRemessa_idRemessa(rs.getInt("Remessa_idRemessa"));
+				mapa.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				mapa.setCardapio(rs.getString("cardapio"));
 				mapa.setTurno(rs.getString("Turno"));
 				mapa.setNumero_Aluno(rs.getInt("numero_Alunos"));

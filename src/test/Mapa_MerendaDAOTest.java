@@ -17,7 +17,7 @@ public class Mapa_MerendaDAOTest {
 	
 	@Test
 	public void test1AdicionaMapa_Merenda() {
-		mapa.setRemessa_idRemessa(1);
+		mapa.setIdEstoque(1);
 		mapa.setCardapio("Arroz com frango");
 		mapa.setTurno("Primeiro");
 		mapa.setNumero_Aluno(40);

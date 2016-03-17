@@ -7,7 +7,7 @@ import org.junit.Test;
 import dao.Mapa_MerendaDAO;
 import model.Mapa_Merenda;
 
-public class Mapa_RemessaDAOTest {
+public class Mapa_MerendaDAOTest {
 	private Mapa_Merenda mapa;
 	private Mapa_MerendaDAO dao = new Mapa_MerendaDAO();
 	@Before

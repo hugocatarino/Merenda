@@ -16,6 +16,7 @@ public class GastoDAO {
 	
 	public void adicionaGasto(Gasto gasto) {
 		try {
+			AlimentoDAO dao = new AlimentoDAO();
 			String sql = "INSERT INTO `Merenda`.`Gasto` (Alimento_idAlimento, Mapa_Merenda_idMapa_Merenda, peso) "
 				+ "VALUES (?,?,?)";
 			String sql2 = "SELECT idGasto FROM `Merenda`.`Gasto` ORDER BY idGasto DESC LIMIT 1";
@@ -28,6 +29,7 @@ public class GastoDAO {
 			stmt.close();
 			ResultSet rs = stmt2.executeQuery();
 			if(rs.next()) {
+				dao.modificaCusto(gasto.getIdAlimento(), gasto.getPeso());
 				gasto.setIdGasto(rs.getInt("idGasto"));
 			}
 			

@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Clock;
+import java.util.ArrayList;
 
 import model.Escola;
 
@@ -56,6 +58,25 @@ public class EscolaDAO {
 		}
 	}
 	
+        public ArrayList<Escola> getAllEscola() {
+        ArrayList<Escola> listaEscola = new ArrayList<Escola>();
+            try {
+                Escola escola;
+                String sql = "SELECT * FROM `Merenda`.`Escola`";
+                PreparedStatement stmt = this.conexao.prepareStatement(sql);
+                ResultSet rs = stmt.executeQuery();
+                while(rs.next()) {
+                    escola = new Escola();
+                    escola.setIdEscola(rs.getInt("idEscola"));
+                    escola.setNome(rs.getString("nome"));
+                    listaEscola.add(escola);
+                }
+                
+            } catch(SQLException sqlException) {
+                System.err.println(sqlException + "Erro ao pegar todas as escolas.");
+            }
+               return listaEscola;
+        }
 	public Escola getLastEscola() {
 		Escola escola = new Escola();
 		try {

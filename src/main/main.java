@@ -2,6 +2,7 @@ package main;
 
 import dao.EscolaDAO;
 import model.Escola;
+import view.TelaPrincipal;
 
 public class main {
 
@@ -13,6 +14,9 @@ public class main {
 		dao.adicionaEscola(escola);
 		*/
 //		dao.removeEscola(escola.getNome());
+            TelaPrincipal mainFrame = new TelaPrincipal();
+            mainFrame.setVisible(true);
+
 	}
 
 }

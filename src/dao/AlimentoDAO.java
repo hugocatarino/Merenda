@@ -14,7 +14,7 @@ public class AlimentoDAO {
 		conexao = new ConnectionFactory().getConnection();
 	}
 	
-	public void adicionaAlimento(Alimento alimento, int idRemessa) {
+	public void adicionaAlimento(Alimento alimento) {
 		try {
 			String sql = "INSERT INTO `Merenda`.`Alimento` (nome, Estoque_idEstoque, tipo, peso_liq, quantidade, "
 				+ "falta, recebido) VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -36,7 +36,7 @@ public class AlimentoDAO {
 				alimento.setIdAlimento(rs.getInt("idAlimento"));
 			}
 			stmt = this.conexao.prepareStatement(sql3);
-			stmt.setInt(1, idRemessa);
+			stmt.setInt(1, alimento.getIdEstoque());
 			stmt.setInt(2, alimento.getIdAlimento());
 			stmt.execute();
 			stmt.close();

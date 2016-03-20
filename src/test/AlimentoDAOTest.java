@@ -17,16 +17,15 @@ public class AlimentoDAOTest {
 	
 	@Test
 	public void test1AdicionaAlimento() {
-		alimento.setNome("Açafrão");
+		alimento.setNome("Aï¿½afrï¿½o");
 		alimento.setIdEstoque(1);
 		alimento.setTipo(2);
 		alimento.setPeso_liq(100);
 		alimento.setQuantidade(03);
 		alimento.setFalta(2);
 		alimento.setRecebido(300);
-		int idRemessa = 1;
 		float custo = 50;
-		dao.adicionaAlimento(alimento,idRemessa);
+		dao.adicionaAlimento(alimento);
 		Assert.assertEquals(alimento.getIdEstoque(), dao.getLastAlimento().getIdEstoque());
 		int idAlimento = dao.buscaAlimento(alimento.getIdEstoque()).getIdEstoque();
 		Assert.assertEquals(alimento.getIdEstoque(), idAlimento);

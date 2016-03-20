@@ -1,8 +1,9 @@
 package model;
 
 public class Estoque {
-	int idEstoque;
-	int idEscola;
+	private int idEstoque;
+	private int idEscola;
+        private String nome;
 
 	public int getIdEstoque() {
 		return idEstoque;
@@ -16,5 +17,10 @@ public class Estoque {
 	public void setIdEscola(int idEscola) {
 		this.idEscola = idEscola;
 	}
-	
+	public String getNome() {
+                return nome;
+        }
+        public void setNome(String nome) {
+                this.nome = nome;
+        }
 }

@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Escola` (
 CREATE TABLE IF NOT EXISTS `Merenda`.`Estoque` (
   idEstoque INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   Escola_idEscola INTEGER UNSIGNED NOT NULL,
+  nome VARCHAR(30) NULL, 
   PRIMARY KEY(idEstoque),
   INDEX Estoque_FKIndex1(Escola_idEscola)
 )ENGINE = InnoDB;
@@ -49,13 +50,9 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
   idAlimento INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   Estoque_idEstoque INTEGER UNSIGNED NOT NULL,
   nome VARCHAR(20) NULL,
-  tipo INTEGER UNSIGNED NULL,
-  peso_liq FLOAT NULL,
-  quantidade FLOAT NULL,
-  falta INTEGER UNSIGNED NULL,
-  recebido FLOAT NULL,
+  total FLOAT NULL,
   PRIMARY KEY(idAlimento),
-  INDEX Alimento_FKIndex1(Estoque_idEstoque)
+  INDEX Alimento_FKIndex2(Estoque_idEstoque)
 )ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -65,6 +62,11 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
 CREATE TABLE IF NOT EXISTS `Merenda`.`Remessa_has_Alimento` (
   Remessa_idRemessa INTEGER UNSIGNED NOT NULL,
   Alimento_idAlimento INTEGER UNSIGNED NOT NULL,
+  tipo INTEGER UNSIGNED NULL,
+  peso_liq FLOAT NULL,
+  quantidade INTEGER UNSIGNED NULL,
+  falta INTEGER UNSIGNED NULL,
+  recebido FLOAT NULL,
   PRIMARY KEY(Remessa_idRemessa, Alimento_idAlimento),
   INDEX Remessa_has_Alimento_FKIndex1(Remessa_idRemessa),
   INDEX Remessa_has_Alimento_FKIndex2(Alimento_idAlimento)

@@ -116,6 +116,29 @@ public class AlimentoDAO {
 		}
 		return listaAlimento;
 	}
+        
+        public ArrayList<Alimento> getAllAlimentoEstoque(int idEstoque) {
+		ArrayList<Alimento> listaAlimento = new ArrayList<Alimento>();
+		try {
+			String sql = "SELECT * FROM `Merenda`.`Alimento` WHERE Estoque_idEstoque = ?";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+                        stmt.setInt(1, idEstoque);
+			ResultSet rs = stmt.executeQuery();
+			while(rs.next()) {
+				Alimento alimento = new Alimento();
+				alimento.setIdAlimento(rs.getInt("idAlimento"));
+				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
+				alimento.setNome(rs.getString("nome"));
+				alimento.setTotal(rs.getFloat("total"));
+				listaAlimento.add(alimento);
+			}
+			rs.close();
+			stmt.close();
+		} catch(SQLException sqlException) {
+			System.err.println(sqlException + "erro ao pegar o ultimo!");
+		}
+		return listaAlimento;
+	}
 	
 	public Alimento getLastAlimento() {
 		Alimento alimento = new Alimento();

@@ -13,7 +13,7 @@ USE `Merenda`;
 
 CREATE TABLE IF NOT EXISTS `Merenda`.`Escola` (
   idEscola INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  nome VARCHAR(30) NULL,
+  nome VARCHAR(50) NULL,
   PRIMARY KEY(idEscola)
 )ENGINE = InnoDB;
 

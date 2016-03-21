@@ -73,10 +73,29 @@ public class EstoqueDAO {
                 return listaEstoque;
         }
         
+        public Estoque buscaEstoque(int idEstoque) {
+            Estoque estoque = new Estoque();
+            try {
+                String sql = "SELECT * FROM `Merenda`.`Estoque` WHERE idEstoque = ?";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+                        stmt.setInt(1, idEstoque);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+                                estoque.setIdEscola(rs.getInt("Escola_idEscola"));
+                                estoque.setIdEstoque(rs.getInt("idEstoque"));
+                                estoque.setNome(rs.getString("nome"));
+                        }
+            }catch(SQLException sqlException) {
+                System.err.println(sqlException + "Erro ao pegar o ultimo estoque.");
+            }
+            
+            return estoque;
+        }
+        
         public Estoque getLastEstoque() {
             Estoque estoque = new Estoque();
             try {
-                String sql = "SELECT idEscola,nome FROM `Merenda`.`Estoque` ORDER BY idEstoque DESC LIMIT 1";
+                String sql = "SELECT * FROM `Merenda`.`Estoque` ORDER BY idEstoque DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {

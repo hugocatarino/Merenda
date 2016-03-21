@@ -5,6 +5,8 @@
  */
 package view;
 
+import dao.AlimentoDAO;
+import javax.swing.JOptionPane;
 import model.Alimento;
 
 /**
@@ -13,18 +15,56 @@ import model.Alimento;
  */
 public class TelaNovoAlimento extends javax.swing.JDialog {
 
-    private Alimento alimento = new Alimento();
+    private Alimento alimento;
+    public static TelaPrincipal principal;
     public TelaNovoAlimento() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public TelaNovoAlimento(java.awt.Frame parent, boolean modal) {
-        super(parent, modal);
+    public TelaNovoAlimento(TelaPrincipal parent, boolean modal) {
+        //super(parent, modal);
+        this.principal = parent;
+        this.setModal(modal);
+        setLocationRelativeTo(this);
         initComponents();
+        limpaCampos();
+    }
+    public void limpaCampos() {
+        jTextFieldAntigo.setText("0");
+        jTextFieldNovo.setText("0");
+        jTextFieldEntrada.setText("0");
+        jTextFieldSaida.setText("0");
+        jTextFieldEntrada.setEditable(false);
+        jTextFieldSaida.setEditable(false);
+        jTextFieldNovo.setEditable(false);
+    }
+    
+    private void exibirInformacao(String info) {
+        JOptionPane.showMessageDialog(this, info, "Atenção", JOptionPane.INFORMATION_MESSAGE);
+    }
+    
+    public boolean validarCampos() {
+        if(jTextFieldNomeAlimento.getText().trim().length() == 0){
+            this.exibirInformacao("O valor do campo 'Nome' não foi informado.");
+            jTextFieldNomeAlimento.requestFocus();
+            return false;
+        }
+        else
+            return true;
     }
     
     public Alimento getAlimento() {
         return this.alimento;
+    }
+    
+    public void adicionaAlimento() {
+        AlimentoDAO dao = new AlimentoDAO();
+        alimento = new Alimento();
+        alimento.setNome(jTextFieldNomeAlimento.getText());
+        alimento.setTotal(Float.parseFloat(jTextFieldAntigo.getText()));
+        System.out.println("Total = " + alimento.getTotal());
+        alimento.setIdEstoque(principal.getEstoque().getIdEstoque());
+        dao.adicionaAlimento(alimento);
     }
     
     /**
@@ -67,6 +107,11 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         jLabelNovo.setText("Novo");
 
         jTextFieldAntigo.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jTextFieldAntigo.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldAntigoKeyReleased(evt);
+            }
+        });
 
         jTextFieldEntrada.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jTextFieldEntrada.addActionListener(new java.awt.event.ActionListener() {
@@ -88,6 +133,11 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
 
         jButtonAdicionar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jButtonAdicionar.setText("Adicionar");
+        jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAdicionarActionPerformed(evt);
+            }
+        });
 
         jButtonCancelar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         jButtonCancelar.setText("Cancelar");
@@ -174,6 +224,20 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         this.dispose();
     }//GEN-LAST:event_jButtonCancelarActionPerformed
 
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+       if(validarCampos()) {
+           adicionaAlimento();
+           principal.carregaAlimentoDAO(principal.getEstoque().getIdEstoque());
+           this.dispose();
+       }
+           
+       
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
+
+    private void jTextFieldAntigoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAntigoKeyReleased
+        jTextFieldNovo.setText(jTextFieldAntigo.getText());
+    }//GEN-LAST:event_jTextFieldAntigoKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -205,7 +269,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                TelaNovoAlimento dialog = new TelaNovoAlimento(new javax.swing.JFrame(), true);
+                TelaNovoAlimento dialog = new TelaNovoAlimento(principal, true);
                 dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                     @Override
                     public void windowClosing(java.awt.event.WindowEvent e) {

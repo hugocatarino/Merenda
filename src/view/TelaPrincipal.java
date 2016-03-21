@@ -5,9 +5,12 @@
  */
 package view;
 
+import dao.AlimentoDAO;
 import dao.EscolaDAO;
 import dao.EstoqueDAO;
 import java.util.ArrayList;
+import javax.swing.table.DefaultTableModel;
+import model.Alimento;
 import model.Escola;
 import model.Estoque;
 
@@ -16,41 +19,69 @@ import model.Estoque;
  * @author Hugo
  */
 public class TelaPrincipal extends javax.swing.JFrame {
-    private Escola escola;
     private ArrayList<Escola> listaEscola;
     private ArrayList<Estoque> listaEstoque;
+    private ArrayList<Alimento> listaAlimento;
+    private Escola escola;
+    private Estoque estoque;
     
     public TelaPrincipal() {
         initComponents();
         carregaEscolaDAO();
-        modificaComboBoxEscola();
-//        modificaComboBoxEstoque(1);
+    }
+    
+    public Escola getEscola() {
+        escola = listaEscola.get(jComboBoxEscola.getSelectedIndex());
+        return escola;
+    }
+    
+    public Estoque getEstoque() {
+        estoque = listaEstoque.get(jComboBoxEstoque.getSelectedIndex());
+        return estoque;
     }
     
     public void carregaEscolaDAO() {
         EscolaDAO dao = new EscolaDAO();
         listaEscola = dao.getAllEscola();
-    }
-    
-    public void modificaComboBoxEscola() {       
-        jComboBoxEscola.removeAllItems();
         for(int i = 0; i < listaEscola.size(); i++) {
             jComboBoxEscola.addItem(listaEscola.get(i).getNome());
         }
     }
     
-    public void modificaComboBoxEstoque(int idEscola) {
+    public void carregaEstoqueDAO(int idEscola) {
         EstoqueDAO dao = new EstoqueDAO();
         listaEstoque = dao.getAllEstoque(idEscola);
         jComboBoxEstoque.removeAllItems();
+        if(jComboBoxEstoque.getSelectedIndex() != 1)
         for(int i = 0; i < listaEstoque.size(); i++) {
             jComboBoxEstoque.addItem(listaEstoque.get(i).getNome());
         }
     }
     
-    public void selecionarEscola() {
-        
+    public void carregaAlimentoDAO(int idEstoque) {
+        DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
+        AlimentoDAO dao = new AlimentoDAO();
+        listaAlimento = dao.getAllAlimentoEstoque(idEstoque);
+        model.setRowCount(0);
+        for (int i = 0; i < listaAlimento.size(); i++) {
+            model.addRow(new String[]{listaAlimento.get(i).getNome(), "0", "0", "0", Float.toString(listaAlimento.get(i).getTotal())});
+        }
     }
+    
+    public void limpaTableAlimento() {
+        DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
+        model.setRowCount(0);
+    }
+    
+    /*
+    public void modificaTableAlimento(int idEstoque) {
+        DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
+        carregaAlimentoDAO(idEstoque);
+        model.setRowCount(0);
+        for (int i = 0; i < listaAlimento.size(); i++) {
+            model.addRow(new String[]{listaAlimento.get(i).getNome(), "0", "0", "0", Float.toString(listaAlimento.get(i).getTotal())});
+        }
+    }*/
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -67,8 +98,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jPanelEstoque = new javax.swing.JPanel();
         jLabelEstoque = new javax.swing.JLabel();
         jComboBoxEstoque = new javax.swing.JComboBox<>();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jScrollPaneListaAlimento = new javax.swing.JScrollPane();
+        jTableListaAlimento = new javax.swing.JTable();
         jButtonAdicionarAlimento = new javax.swing.JButton();
         jComboBoxEscola = new javax.swing.JComboBox<>();
 
@@ -88,13 +119,18 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jLabelEstoque.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
         jLabelEstoque.setText("Estoque:");
 
+        jComboBoxEstoque.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxEstoqueItemStateChanged(evt);
+            }
+        });
         jComboBoxEstoque.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBoxEstoqueActionPerformed(evt);
             }
         });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel 
+        jTableListaAlimento.setModel(new javax.swing.table.DefaultTableModel 
             (
                 null,
                 new String [] {
@@ -107,7 +143,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     return false;
                 }
             });
-            jScrollPane1.setViewportView(jTable1);
+            jScrollPaneListaAlimento.setViewportView(jTableListaAlimento);
 
             jButtonAdicionarAlimento.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
             jButtonAdicionarAlimento.setText("Adicionar Alimento");
@@ -132,7 +168,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                             .addGap(0, 18, Short.MAX_VALUE)
                             .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jButtonAdicionarAlimento)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addContainerGap())
             );
             jPanelEstoqueLayout.setVerticalGroup(
@@ -143,7 +179,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
                         .addComponent(jLabelEstoque)
                         .addComponent(jComboBoxEstoque, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
                     .addComponent(jButtonAdicionarAlimento)
                     .addGap(21, 21, 21))
@@ -211,16 +247,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     private void jComboBoxEscolaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEscolaItemStateChanged
         // TODO add your handling code here:
-        modificaComboBoxEstoque(jComboBoxEscola.getSelectedIndex() + 1);
-        escola = listaEscola.get(jComboBoxEscola.getSelectedIndex());
+        if(listaEscola.get(jComboBoxEscola.getSelectedIndex()) != null)
+        carregaEstoqueDAO(listaEscola.get(jComboBoxEscola.getSelectedIndex()).getIdEscola());
     
     }//GEN-LAST:event_jComboBoxEscolaItemStateChanged
 
     private void jButtonAdicionarAlimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarAlimentoActionPerformed
+        
         TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
         novoAlimento.setVisible(true);
         
     }//GEN-LAST:event_jButtonAdicionarAlimentoActionPerformed
+
+    private void jComboBoxEstoqueItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstoqueItemStateChanged
+        if(jComboBoxEstoque.getSelectedIndex() != -1)
+            carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
+        else {
+            limpaTableAlimento();
+        }
+    }//GEN-LAST:event_jComboBoxEstoqueItemStateChanged
 
     /**
      * @param args the command line arguments
@@ -268,8 +313,10 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel jLabelEscola;
     private javax.swing.JLabel jLabelEstoque;
     private javax.swing.JPanel jPanelEstoque;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPaneListaAlimento;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableListaAlimento;
     // End of variables declaration//GEN-END:variables
+
+    
 }

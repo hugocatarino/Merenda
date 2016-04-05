@@ -7,17 +7,19 @@ package view;
 
 import dao.AlimentoDAO;
 import dao.RemessaDAO;
+import dao.Remessa_has_AlimentoDAO;
 import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import model.Alimento;
 import model.Remessa;
+import model.Remessa_has_Alimento;
 
 /**
  *
  * @author Hugo
  */
 public class TelaNovoAlimento extends javax.swing.JDialog {
-
+    private Remessa_has_Alimento remessaAlimento;
     private Alimento alimento;
     private Remessa remessa;
     public static TelaPrincipal principal;
@@ -32,11 +34,9 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         setLocationRelativeTo(this);
         initComponents();
         limpaCampos();
-        disableButtons();
     }
     
     private void disableButtons() {
-        jTextFieldNovo.setEditable(false);
         jTextFieldEntrada.setEditable(false);
         jFormattedTextFieldData.setEditable(false);
         jTextFieldAntigo.setEditable(false);
@@ -47,12 +47,12 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     }
     
     private void enableButtons() {
-        jTextFieldNovo.setEditable(true);
         jTextFieldEntrada.setEditable(true);
         jFormattedTextFieldData.setEditable(true);
-        jTextFieldAntigo.setEditable(true);
-        jTextFieldSaida.setEditable(true);
-        jTextFieldNovo.setEditable(true);
+        //jTextFieldAntigo.setEditable(true);
+        if(alimento.getTotal() != 0) {
+            jTextFieldSaida.setEditable(true);
+        }
         jButtonAdicionar.setEnabled(true);
         jButtonCancelar.setEnabled(true);
     }
@@ -62,6 +62,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         jTextFieldNovo.setText("0");
         jTextFieldEntrada.setText("0");
         jTextFieldSaida.setText("0");
+        disableButtons();
     }
     
     private boolean validaNumero(KeyEvent evt) {
@@ -77,12 +78,21 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         JOptionPane.showMessageDialog(this, info, "Atenção", JOptionPane.INFORMATION_MESSAGE);
     }
     
-    private boolean validarCampos() {
+   private boolean validaNomeAlimento() {
         if(jTextFieldNomeAlimento.getText().trim().length() == 0){
             this.exibirInformacao("O valor do campo 'Nome' não foi informado.");
             jTextFieldNomeAlimento.requestFocus();
             return false;
-        } if("  /  /    ".equals(jFormattedTextFieldData.getText())) {
+        } else {
+            return true;
+        }
+    }
+    
+    private boolean validarCampos() {
+        if(!validaNomeAlimento()) {
+            return false;
+        } 
+        if("  /  /    ".equals(jFormattedTextFieldData.getText())) {
             this.exibirInformacao("O campo 'Data' não foi informado.");
             jFormattedTextFieldData.requestFocus();
             return false;
@@ -117,6 +127,15 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         remessa.setIdEstoque(principal.getEstoque().getIdEstoque());
         remessa.setNome(jTextFieldNomeAlimento.getText());
         dao.adicionaRemessa(remessa);
+    }
+    
+    private void adicionaRemessaAlimento() {
+        Remessa_has_AlimentoDAO dao = new Remessa_has_AlimentoDAO();
+        remessaAlimento = new Remessa_has_Alimento();
+        remessaAlimento.setIdAlimento(alimento.getNome());
+        remessaAlimento.setIdRemessa(remessa.getIdRemessa());
+        remessaAlimento.setRecebido(Float.parseFloat(jTextFieldEntrada.getText()));
+        dao.adicionaRemessa_has_Alimento(remessaAlimento);
     }
     
     /**
@@ -324,6 +343,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         if(validarCampos()) {
            adicionaAlimento();
            adicionaRemessa();
+           adicionaRemessaAlimento();
            principal.carregaAlimentoDAO(principal.getEstoque().getIdEstoque());
            this.dispose();
        }
@@ -352,7 +372,14 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     }//GEN-LAST:event_jFormattedTextFieldDataActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
+        if(validaNomeAlimento()) {
+            String nome = jTextFieldNomeAlimento.getText();
+            AlimentoDAO dao = new AlimentoDAO();
+            alimento = dao.buscaAlimento(nome);
+            if(alimento.getNome() == null) {
+                enableButtons();
+            }
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

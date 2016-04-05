@@ -8,11 +8,13 @@ package view;
 import dao.AlimentoDAO;
 import dao.EscolaDAO;
 import dao.EstoqueDAO;
+import dao.Remessa_has_AlimentoDAO;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 import model.Alimento;
 import model.Escola;
 import model.Estoque;
+import model.Remessa_has_Alimento;
 
 /**
  *
@@ -25,9 +27,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private Escola escola;
     private Estoque estoque;
     
+    private void disableButton() {
+        jButtonRemover.setEnabled(false);
+    }
+    
     public TelaPrincipal() {
         initComponents();
         carregaEscolaDAO();
+        disableButton();
     }
     
     public Escola getEscola() {
@@ -61,10 +68,23 @@ public class TelaPrincipal extends javax.swing.JFrame {
     public void carregaAlimentoDAO(int idEstoque) {
         DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
         AlimentoDAO dao = new AlimentoDAO();
+        Remessa_has_AlimentoDAO daoRemessaAlimento = new Remessa_has_AlimentoDAO();
         listaAlimento = dao.getAllAlimentoEstoque(idEstoque);
         model.setRowCount(0);
+        float recebido = 0,antigo = 0;
         for (int i = 0; i < listaAlimento.size(); i++) {
-            model.addRow(new String[]{listaAlimento.get(i).getNome(), "0", "0", "0", Float.toString(listaAlimento.get(i).getTotal())});
+            ArrayList<Remessa_has_Alimento> lista =
+                    daoRemessaAlimento.getListaRemessaAlimento(listaAlimento.get(i).getNome());
+            if(lista.size() > 0) {
+                recebido = lista.get(lista.size() - 1).getRecebido();
+                if(lista.size() > 1) {
+                    antigo = lista.get(lista.size() - 2).getRecebido();
+                }
+            } else {
+                System.err.println("RemessaALimento = 0");
+            }
+            model.addRow(new String[]{listaAlimento.get(i).getNome(),
+                Float.toString(antigo), Float.toString(recebido), "0", Float.toString(listaAlimento.get(i).getTotal())});
         }
     }
     
@@ -86,6 +106,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jScrollPaneListaAlimento = new javax.swing.JScrollPane();
         jTableListaAlimento = new javax.swing.JTable();
         jButtonAdicionarAlimento = new javax.swing.JButton();
+        jButtonRemover = new javax.swing.JButton();
         jComboBoxEscola = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -128,6 +149,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     return false;
                 }
             });
+            jTableListaAlimento.addMouseListener(new java.awt.event.MouseAdapter() {
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    jTableListaAlimentoMouseClicked(evt);
+                }
+            });
             jScrollPaneListaAlimento.setViewportView(jTableListaAlimento);
 
             jButtonAdicionarAlimento.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
@@ -135,6 +161,15 @@ public class TelaPrincipal extends javax.swing.JFrame {
             jButtonAdicionarAlimento.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
                     jButtonAdicionarAlimentoActionPerformed(evt);
+                }
+            });
+
+            jButtonRemover.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+            jButtonRemover.setText("Remover Alimento");
+            jButtonRemover.setMaximumSize(new java.awt.Dimension(141, 25));
+            jButtonRemover.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButtonRemoverActionPerformed(evt);
                 }
             });
 
@@ -151,9 +186,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                             .addComponent(jComboBoxEstoque, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEstoqueLayout.createSequentialGroup()
                             .addGap(0, 18, Short.MAX_VALUE)
-                            .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jButtonAdicionarAlimento)
-                                .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEstoqueLayout.createSequentialGroup()
+                                    .addComponent(jButtonAdicionarAlimento)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addContainerGap())
             );
             jPanelEstoqueLayout.setVerticalGroup(
@@ -166,7 +204,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGap(18, 18, 18)
-                    .addComponent(jButtonAdicionarAlimento)
+                    .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButtonAdicionarAlimento)
+                        .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGap(21, 21, 21))
             );
 
@@ -252,6 +292,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jComboBoxEstoqueItemStateChanged
 
+    private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
+        AlimentoDAO dao = new AlimentoDAO();
+        int linhaSelecionada = jTableListaAlimento.getSelectedRow();
+        String alimento = listaAlimento.get(linhaSelecionada).getNome();
+        System.out.println(alimento);        
+        dao.removeAlimento(alimento);
+        carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
+        System.out.println(jTableListaAlimento.getRowCount());
+        if(jTableListaAlimento.getRowCount() == 0) {
+            disableButton();
+        } else {
+            jTableListaAlimento.setRowSelectionInterval(linhaSelecionada - 1, linhaSelecionada - 1);
+        }
+    }//GEN-LAST:event_jButtonRemoverActionPerformed
+
+    private void jTableListaAlimentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaAlimentoMouseClicked
+        jButtonRemover.setEnabled(true);
+    }//GEN-LAST:event_jTableListaAlimentoMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -293,6 +352,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionarAlimento;
     private javax.swing.JButton jButtonBuscar;
+    private javax.swing.JButton jButtonRemover;
     private javax.swing.JComboBox<String> jComboBoxEscola;
     private javax.swing.JComboBox<String> jComboBoxEstoque;
     private javax.swing.JLabel jLabelEscola;

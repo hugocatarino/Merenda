@@ -19,9 +19,9 @@ public class GastoDAOTest {
 	
 	@Test
 	public void test1AdicionaGasto() {
-		gasto.setIdAlimento(1);
 		gasto.setIdMapa_Merenda(1);
 		gasto.setPeso(50);
+		gasto.setIdAlimento("Açafrão");
 		dao.adicionaGasto(gasto);
 		Assert.assertEquals(gasto.getIdGasto(), dao.GetLastGasto().getIdGasto());
 	}

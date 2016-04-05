@@ -47,11 +47,10 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Remessa` (
 -- -----------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
-  idAlimento INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+  nome VARCHAR(20) NOT NULL,
   Estoque_idEstoque INTEGER UNSIGNED NOT NULL,
-  nome VARCHAR(20) NULL,
   total FLOAT NULL,
-  PRIMARY KEY(idAlimento),
+  PRIMARY KEY(nome),
   INDEX Alimento_FKIndex2(Estoque_idEstoque)
 )ENGINE = InnoDB;
 
@@ -61,15 +60,15 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Alimento` (
 
 CREATE TABLE IF NOT EXISTS `Merenda`.`Remessa_has_Alimento` (
   Remessa_idRemessa INTEGER UNSIGNED NOT NULL,
-  Alimento_idAlimento INTEGER UNSIGNED NOT NULL,
+  Alimento_nome VARCHAR(20) NOT NULL,
   tipo INTEGER UNSIGNED NULL,
   peso_liq FLOAT NULL,
   quantidade INTEGER UNSIGNED NULL,
   falta INTEGER UNSIGNED NULL,
   recebido FLOAT NULL,
-  PRIMARY KEY(Remessa_idRemessa, Alimento_idAlimento),
+  PRIMARY KEY(Remessa_idRemessa, Alimento_nome),
   INDEX Remessa_has_Alimento_FKIndex1(Remessa_idRemessa),
-  INDEX Remessa_has_Alimento_FKIndex2(Alimento_idAlimento)
+  INDEX Remessa_has_Alimento_FKIndex2(Alimento_nome)
 )ENGINE = InnoDB;
 
 -- -----------------------------------------------------
@@ -92,10 +91,10 @@ CREATE TABLE IF NOT EXISTS `Merenda`.`Mapa_Merenda` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `Merenda`.`Gasto` (
   idGasto INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  Alimento_idAlimento INTEGER UNSIGNED NOT NULL,
+  Alimento_nome VARCHAR(20) NOT NULL,
   Mapa_Merenda_idMapa_Merenda INTEGER UNSIGNED NOT NULL,
   peso FLOAT NULL,
   PRIMARY KEY(idGasto),
   INDEX Gasto_FKIndex1(Mapa_Merenda_idMapa_Merenda),
-  INDEX Gasto_FKIndex2(Alimento_idAlimento)
+  INDEX Gasto_FKIndex2(Alimento_nome)
 )ENGINE = InnoDB;

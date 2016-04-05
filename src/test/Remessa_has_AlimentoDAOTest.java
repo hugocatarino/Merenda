@@ -18,7 +18,7 @@ public class Remessa_has_AlimentoDAOTest {
 	
 	@Test
 	public void test1AdicionaRemessaALimento() {
-		remessaAlimento.setIdAlimento(1);
+		remessaAlimento.setIdAlimento("Açafrão");
 		remessaAlimento.setIdRemessa(1);
 		remessaAlimento.setFalta(2);
 		remessaAlimento.setPeso_liq(100);

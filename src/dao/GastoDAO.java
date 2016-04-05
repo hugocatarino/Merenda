@@ -17,12 +17,12 @@ public class GastoDAO {
 	public void adicionaGasto(Gasto gasto) {
 		try {
 			AlimentoDAO dao = new AlimentoDAO();
-			String sql = "INSERT INTO `Merenda`.`Gasto` (Alimento_idAlimento, Mapa_Merenda_idMapa_Merenda, peso) "
+			String sql = "INSERT INTO `Merenda`.`Gasto` (Alimento_nome, Mapa_Merenda_idMapa_Merenda, peso) "
 				+ "VALUES (?,?,?)";
 			String sql2 = "SELECT idGasto FROM `Merenda`.`Gasto` ORDER BY idGasto DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			PreparedStatement stmt2 = this.conexao.prepareStatement(sql2);
-			stmt.setInt(1, gasto.getIdAlimento());
+			stmt.setString(1, gasto.getIdAlimento());
 			stmt.setInt(2, gasto.getIdMapa_Merenda());
 			stmt.setFloat(3, gasto.getPeso());
 			stmt.execute();
@@ -59,13 +59,13 @@ public class GastoDAO {
 	public Gasto GetLastGasto() {
 		Gasto gasto = new Gasto();
 		try {
-			String sql = "SELECT idGasto, Alimento_idAlimento, Mapa_Merenda_idMapa_Merenda, peso "
+			String sql = "SELECT idGasto, Alimento_nome, Mapa_Merenda_idMapa_Merenda, peso "
 					+ "FROM `Merenda`.`Gasto` ORDER BY idGasto DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
 				gasto.setIdGasto(rs.getInt("idGasto"));
-				gasto.setIdAlimento(rs.getInt("Alimento_idAlimento"));
+				gasto.setIdAlimento(rs.getString("Alimento_nome"));
 				gasto.setIdMapa_Merenda(rs.getInt("Mapa_Merenda_idMapa_Merenda"));
 				gasto.setPeso(rs.getInt("peso"));
 			}

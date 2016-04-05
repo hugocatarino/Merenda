@@ -3,7 +3,7 @@ package model;
 public class Gasto {
 	private int idGasto;
 	private int idMapa_Merenda;
-	private int idAlimento;
+	private String idAlimento;
 	private float peso;
 	
 	public int getIdGasto() {
@@ -18,10 +18,10 @@ public class Gasto {
 	public void setIdMapa_Merenda(int idMapa_Merenda) {
 		this.idMapa_Merenda = idMapa_Merenda;
 	}
-	public int getIdAlimento() {
+	public String getIdAlimento() {
 		return idAlimento;
 	}
-	public void setIdAlimento(int idAlimento) {
+	public void setIdAlimento(String idAlimento) {
 		this.idAlimento = idAlimento;
 	}
 	public float getPeso() {

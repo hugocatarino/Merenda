@@ -2,7 +2,7 @@ package model;
 
 public class Remessa_has_Alimento {
 	private int idRemessa;
-	private int idAlimento;
+	private String idAlimento;
 	private int tipo;
 	private float peso_liq;
 	private int quantidade;
@@ -15,10 +15,10 @@ public class Remessa_has_Alimento {
 	public void setIdRemessa(int idRemessa) {
 		this.idRemessa = idRemessa;
 	}
-	public int getIdAlimento() {
+	public String getIdAlimento() {
 		return idAlimento;
 	}
-	public void setIdAlimento(int idAlimento) {
+	public void setIdAlimento(String idAlimento) {
 		this.idAlimento = idAlimento;
 	}
 	public int getTipo() {
@@ -51,4 +51,5 @@ public class Remessa_has_Alimento {
 	public void setRecebido(float recebido) {
 		this.recebido = recebido;
 	}
+
 }

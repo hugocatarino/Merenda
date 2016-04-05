@@ -18,7 +18,7 @@ public class AlimentoDAO {
 	public void adicionaAlimento(Alimento alimento) {
 		try {
 			String sql = "INSERT INTO `Merenda`.`Alimento` (nome, Estoque_idEstoque, total) VALUES (?, ?, ?)";
-			String sql2 = "SELECT idAlimento FROM `Merenda`.`Alimento` ORDER BY idAlimento DESC LIMIT 1";
+			String sql2 = "SELECT idAlimento FROM `Merenda`.`Alimento` ORDER BY nome DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			stmt.setString(1, alimento.getNome());
 			stmt.setInt(2, alimento.getIdEstoque());
@@ -28,7 +28,7 @@ public class AlimentoDAO {
 			stmt = this.conexao.prepareStatement(sql2);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
-				alimento.setIdAlimento(rs.getInt("idAlimento"));
+				alimento.setNome(rs.getString("nome"));
 			}
 			stmt.execute();
 			stmt.close();
@@ -39,14 +39,14 @@ public class AlimentoDAO {
 		}
 	}
 	
-	public void removeAlimento(int idAlimento) {
+	public void removeAlimento(String nomeAlimento) {
 		try {
-			String sql = "DELETE FROM `Merenda`.`Alimento` WHERE idAlimento = ?";
+			String sql = "DELETE FROM `Merenda`.`Alimento` WHERE nome = ?";
 			String sql2 = "ALTER TABLE `Merenda`.`Alimento` AUTO_INCREMENT = 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			Remessa_has_AlimentoDAO dao = new Remessa_has_AlimentoDAO();
-			dao.removeIdAlimentoRemessa_has_Alimento(idAlimento);
-			stmt.setInt(1, idAlimento);
+			dao.removeIdAlimentoRemessa_has_Alimento(nomeAlimento);
+			stmt.setString(1, nomeAlimento);
 			stmt.execute();
 			stmt.close();
 			stmt = this.conexao.prepareStatement(sql2);
@@ -58,15 +58,14 @@ public class AlimentoDAO {
 		}
 	}
 	
-	public Alimento buscaAlimento(int idAlimento) {
+	public Alimento buscaAlimento(String nomeAlimento) {
 		Alimento alimento = new Alimento();
 		try {
-			String sql = "SELECT * FROM `Merenda`.`Alimento` WHERE idAlimento = ?";
+			String sql = "SELECT * FROM `Merenda`.`Alimento` WHERE nome = ?";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
-			stmt.setInt(1, idAlimento);
+			stmt.setString(1, nomeAlimento);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
-				alimento.setIdAlimento(rs.getInt("idAlimento"));
 				alimento.setNome(rs.getString("nome"));
 				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setTotal(rs.getFloat("total"));
@@ -77,16 +76,16 @@ public class AlimentoDAO {
 		return alimento;
 	}
 	
-	public void modificaCusto(int idAlimento, float custo) {
+	public void modificaCusto(String nomeAlimento, float custo) {
 		try {
 			
-			Alimento alimento = buscaAlimento(idAlimento);
+			Alimento alimento = buscaAlimento(nomeAlimento);
 			if(alimento != null) {
 //				float novo = alimento.getQuantidade() - (custo/alimento.getPeso_liq());
-				String sql = "UPDATE `Merenda`.`Alimento` SET quantidade = ? WHERE idAlimento = ?";
+				String sql = "UPDATE `Merenda`.`Alimento` SET quantidade = ? WHERE nome = ?";
 				PreparedStatement stmt = this.conexao.prepareStatement(sql);
 //				stmt.setFloat(1, novo);
-				stmt.setInt(2, idAlimento);
+				stmt.setString(2, nomeAlimento);
 				stmt.execute();
 				stmt.close();
 			}
@@ -103,7 +102,6 @@ public class AlimentoDAO {
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				Alimento alimento = new Alimento();
-				alimento.setIdAlimento(rs.getInt("idAlimento"));
 				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setNome(rs.getString("nome"));
 				alimento.setTotal(rs.getFloat("total"));
@@ -126,9 +124,8 @@ public class AlimentoDAO {
 			ResultSet rs = stmt.executeQuery();
 			while(rs.next()) {
 				Alimento alimento = new Alimento();
-				alimento.setIdAlimento(rs.getInt("idAlimento"));
-				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setNome(rs.getString("nome"));
+				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setTotal(rs.getFloat("total"));
 				listaAlimento.add(alimento);
 			}
@@ -143,13 +140,12 @@ public class AlimentoDAO {
 	public Alimento getLastAlimento() {
 		Alimento alimento = new Alimento();
 		try {
-			String sql = "SELECT * FROM `Merenda`.`Alimento` ORDER BY idAlimento DESC LIMIT 1";
+			String sql = "SELECT * FROM `Merenda`.`Alimento` ORDER BY nome DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();
 			if(rs.next()) {
-				alimento.setIdAlimento(rs.getInt("idAlimento"));
-				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setNome(rs.getString("nome"));
+				alimento.setIdEstoque(rs.getInt("Estoque_idEstoque"));
 				alimento.setTotal(rs.getFloat("total"));
 			}
 			rs.close();

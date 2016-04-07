@@ -19,11 +19,13 @@ public class GastoDAOTest {
 	
 	@Test
 	public void test1AdicionaGasto() {
+		float custo = 0;
 		gasto.setIdMapa_Merenda(1);
-		gasto.setPeso(50);
+		gasto.setPeso(custo);
 		gasto.setIdAlimento("Açafrão");
 		dao.adicionaGasto(gasto);
 		Assert.assertEquals(gasto.getIdGasto(), dao.GetLastGasto().getIdGasto());
+		
 	}
 	
 	@Test

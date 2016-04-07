@@ -10,17 +10,19 @@ import dao.AlimentoDAO;
 import model.Alimento;
 
 public class AlimentoDAOTest {
-	AlimentoDAO dao = new AlimentoDAO();
-	Alimento alimento;
+	private AlimentoDAO dao = new AlimentoDAO();
+	private Alimento alimento;
+	private String nomeAlimento = "Teste";
+
 	@Before
 	public void setUp() {
 		alimento = new Alimento();
 	}
-	
+
 	@Test
 	public void test1AdicionaAlimento() {
 		ArrayList<Alimento> listaAlimento = dao.getAllAlimento();
-		alimento.setNome("Torta");
+		alimento.setNome(nomeAlimento);
 		alimento.setIdEstoque(1);
 		alimento.setTotal(0);
 //		float custo = 50;
@@ -32,10 +34,8 @@ public class AlimentoDAOTest {
 	@Test
 	public void test2RemoveAlimento() {
 		ArrayList<Alimento> listaAlimento = dao.getAllAlimento();
-		alimento = dao.getLastAlimento();
-		dao.removeAlimento(alimento.getNome());
+		dao.removeAlimento(nomeAlimento);
 		Assert.assertNotEquals(dao.getLastAlimento().getNome(), alimento.getNome());
 		Assert.assertEquals(listaAlimento.size() - 1, dao.getAllAlimento().size());
 	}
-		
 }

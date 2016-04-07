@@ -19,16 +19,18 @@ public class EstoqueDAO {
             	try {
 			String sql = "INSERT INTO `Merenda`.`Estoque` (Escola_idEscola, nome)"
 				+ "VALUES(?,?)";
-			String sql2 = "SELECT idEscola FROM `Merenda`.`Estoque` ORDER BY idEscola DESC LIMIT 1";
+			String sql2 = "SELECT idEstoque FROM `Merenda`.`Estoque` ORDER BY idEstoque DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			PreparedStatement stmt2 = this.conexao.prepareStatement(sql2);
                         
                         stmt.setInt(1, estoque.getIdEscola());
                         stmt.setString(2, estoque.getNome());
-                        stmt.executeQuery();
+                        stmt.execute();
                         stmt.close();
-                        stmt2.execute();
-                        stmt2.close();
+                        ResultSet rs = stmt2.executeQuery();
+            			if(rs.next()) {
+            				estoque.setIdEstoque(rs.getInt("idEstoque"));
+            			}
                         System.out.println("Estoque adicionado com sucesso!");
                 } catch(SQLException sqlException) {
                     System.err.println(sqlException + "Erro ao adicionar Estoque");

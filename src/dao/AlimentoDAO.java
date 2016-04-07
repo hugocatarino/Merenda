@@ -18,7 +18,7 @@ public class AlimentoDAO {
 	public void adicionaAlimento(Alimento alimento) {
 		try {
 			String sql = "INSERT INTO `Merenda`.`Alimento` (nome, Estoque_idEstoque, total) VALUES (?, ?, ?)";
-			String sql2 = "SELECT idAlimento FROM `Merenda`.`Alimento` ORDER BY nome DESC LIMIT 1";
+			String sql2 = "SELECT nome FROM `Merenda`.`Alimento` ORDER BY nome DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			stmt.setString(1, alimento.getNome());
 			stmt.setInt(2, alimento.getIdEstoque());
@@ -78,13 +78,12 @@ public class AlimentoDAO {
 	
 	public void modificaCusto(String nomeAlimento, float custo) {
 		try {
-			
 			Alimento alimento = buscaAlimento(nomeAlimento);
+			float novo = alimento.getTotal() - custo;
 			if(alimento != null) {
-//				float novo = alimento.getQuantidade() - (custo/alimento.getPeso_liq());
-				String sql = "UPDATE `Merenda`.`Alimento` SET quantidade = ? WHERE nome = ?";
+				String sql = "UPDATE `Merenda`.`Alimento` SET total = ? WHERE nome = ?";
 				PreparedStatement stmt = this.conexao.prepareStatement(sql);
-//				stmt.setFloat(1, novo);
+				stmt.setFloat(1, novo);
 				stmt.setString(2, nomeAlimento);
 				stmt.execute();
 				stmt.close();

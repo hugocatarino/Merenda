@@ -19,7 +19,7 @@ public class Remessa_has_AlimentoDAO {
 		try {
 			String sql = "INSERT INTO `Merenda`.`Remessa_has_Alimento` (Remessa_idRemessa, Alimento_nome, tipo, peso_liq, "
 					+ "quantidade, falta, recebido) VALUES(?, ?, ?, ?, ?, ?, ?)";
-			
+			AlimentoDAO dao = new AlimentoDAO();
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			stmt.setInt(1, remessaAlimento.getIdRemessa());
 			stmt.setString(2, remessaAlimento.getIdAlimento());
@@ -30,6 +30,7 @@ public class Remessa_has_AlimentoDAO {
 			stmt.setFloat(7, remessaAlimento.getRecebido());
 			stmt.execute();
 			stmt.close();
+                        dao.modificaCusto(remessaAlimento.getIdAlimento(), (-1) * remessaAlimento.getRecebido());
 			System.out.println("Remessa_has_Alimento adicionado com sucesso!");
 			
 		} catch (SQLException sqlException) {
@@ -61,7 +62,6 @@ public class Remessa_has_AlimentoDAO {
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			stmt.setString(1, nomeAlimento);
 			stmt.execute();
-			stmt.close();
 			stmt = this.conexao.prepareStatement(sql2);
 			stmt.execute();
 			stmt.close();
@@ -98,12 +98,11 @@ public class Remessa_has_AlimentoDAO {
                 ArrayList<Remessa_has_Alimento> listaRemessaAlimento = new ArrayList<Remessa_has_Alimento>();
                 Remessa_has_Alimento remessaAlimento;
                 try {
-			String sql = "SELECT * FROM `Merenda`.`Remessa_has_Alimento` WHERE Alimento_nome = ?"
-                                + " ORDER BY Alimento_nome DESC LIMIT 1";
+			String sql = "SELECT * FROM `Merenda`.`Remessa_has_Alimento` WHERE Alimento_nome = ?";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
                         stmt.setString(1, nomeAlimento);
 			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
+			while(rs.next()) {
                                 remessaAlimento = new Remessa_has_Alimento();
 				remessaAlimento.setIdAlimento(rs.getString("Alimento_nome"));
 				remessaAlimento.setIdRemessa(rs.getInt("Remessa_idRemessa"));

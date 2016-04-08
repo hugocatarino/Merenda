@@ -18,21 +18,13 @@ public class AlimentoDAO {
 	public void adicionaAlimento(Alimento alimento) {
 		try {
 			String sql = "INSERT INTO `Merenda`.`Alimento` (nome, Estoque_idEstoque, total) VALUES (?, ?, ?)";
-			String sql2 = "SELECT nome FROM `Merenda`.`Alimento` ORDER BY nome DESC LIMIT 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			stmt.setString(1, alimento.getNome());
 			stmt.setInt(2, alimento.getIdEstoque());
 			stmt.setFloat(3, alimento.getTotal());
 			stmt.execute();
 			stmt.close();
-			stmt = this.conexao.prepareStatement(sql2);
-			ResultSet rs = stmt.executeQuery();
-			if(rs.next()) {
-				alimento.setNome(rs.getString("nome"));
-			}
-			stmt.execute();
-			stmt.close();
-			System.out.println("Alimento adicionado com sucesso!");
+			//System.out.println("Alimento adicionado com sucesso!");
 			
 		} catch (SQLException sqlException) {
 			System.err.println(sqlException + "Erro ao adicionar elemento");
@@ -44,8 +36,9 @@ public class AlimentoDAO {
 			String sql = "DELETE FROM `Merenda`.`Alimento` WHERE nome = ?";
 			String sql2 = "ALTER TABLE `Merenda`.`Alimento` AUTO_INCREMENT = 1";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
-			Remessa_has_AlimentoDAO dao = new Remessa_has_AlimentoDAO();
-			dao.removeIdAlimentoRemessa_has_Alimento(nomeAlimento);
+			Remessa_has_AlimentoDAO daoRemessaAlimento = new Remessa_has_AlimentoDAO();
+			daoRemessaAlimento.removeIdAlimentoRemessa_has_Alimento(nomeAlimento);
+                        RemessaDAO daoRemessa = new RemessaDAO();
 			stmt.setString(1, nomeAlimento);
 			stmt.execute();
 			stmt.close();

@@ -18,7 +18,7 @@ public class Remessa_has_AlimentoDAOTest {
 	
 	@Test
 	public void test1AdicionaRemessaALimento() {
-		remessaAlimento.setIdAlimento("Açafrão");
+		remessaAlimento.setIdAlimento("Teste");
 		remessaAlimento.setIdRemessa(1);
 		remessaAlimento.setFalta(2);
 		remessaAlimento.setPeso_liq(100);
@@ -33,8 +33,8 @@ public class Remessa_has_AlimentoDAOTest {
 
 	@Test
 	public void test2RemoveRemessa_has_Alimento() {
-		Remessa_has_Alimento remessaAlimento = dao.getLastRemessa_has_Alimento();
-		dao.removeIdAlimentoRemessa_has_Alimento(remessaAlimento.getIdAlimento());
+		//Remessa_has_Alimento remessaAlimento = dao.getLastRemessa_has_Alimento();
+		dao.removeIdAlimentoRemessa_has_Alimento("Teste");
 		Assert.assertNotEquals(dao.getLastRemessa_has_Alimento().getIdAlimento(), remessaAlimento.getIdAlimento());
 	}
 		

@@ -33,7 +33,7 @@ public class EscolaDAO {
 			}
 			stmt2.close();
 			rs.close();
-			System.out.println("Escola adicionada com sucesso!");
+//			System.out.println("Escola adicionada com sucesso!");
 		} catch (SQLException sqlException) {
 			System.err.println(sqlException + "Erro ao adicionar a Escola.");
 			

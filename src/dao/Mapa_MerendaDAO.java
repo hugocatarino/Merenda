@@ -34,7 +34,7 @@ public class Mapa_MerendaDAO {
 			}
 			stmt2.close();
 			rs.close();
-			System.out.println("Mapa da merenda adicionado com sucesso!");
+//			System.out.println("Mapa da merenda adicionado com sucesso!");
 		} catch (SQLException sqlException) {
 			System.err.println(sqlException + "Erro ao adicionar mapa da merenda!");
 		}
@@ -52,7 +52,7 @@ public class Mapa_MerendaDAO {
 			stmt.close();
 			stmt2.execute();
 			stmt2.close();
-			System.out.println("Mapa da merenda removido com sucesso!");
+//			System.out.println("Mapa da merenda removido com sucesso!");
 		} catch (SQLException sqlException) {
 			System.err.println(sqlException + "Erro ao adicionar mapa da merenda!");
 		}

@@ -31,7 +31,7 @@ public class EstoqueDAO {
             			if(rs.next()) {
             				estoque.setIdEstoque(rs.getInt("idEstoque"));
             			}
-                        System.out.println("Estoque adicionado com sucesso!");
+//                        System.out.println("Estoque adicionado com sucesso!");
                 } catch(SQLException sqlException) {
                     System.err.println(sqlException + "Erro ao adicionar Estoque");
                 }
@@ -48,7 +48,7 @@ public class EstoqueDAO {
                         stmt2.execute();
                         stmt.close();
                         
-                        System.out.println("Estoque removido com sucesso!");
+//                        System.out.println("Estoque removido com sucesso!");
                 } catch(SQLException sqlException) {
                     System.err.println(sqlException + "Erro ao remover Estoque.");
                 }

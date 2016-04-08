@@ -71,20 +71,33 @@ public class TelaPrincipal extends javax.swing.JFrame {
         Remessa_has_AlimentoDAO daoRemessaAlimento = new Remessa_has_AlimentoDAO();
         listaAlimento = dao.getAllAlimentoEstoque(idEstoque);
         model.setRowCount(0);
-        float recebido = 0,antigo = 0;
+        float recebido = 0,anterior = 0;
         for (int i = 0; i < listaAlimento.size(); i++) {
             ArrayList<Remessa_has_Alimento> lista =
                     daoRemessaAlimento.getListaRemessaAlimento(listaAlimento.get(i).getNome());
+            for (int j = 0; j < lista.size(); j++) {
+                System.out.println("Lista: " + lista.get(j).getIdAlimento());
+            }
+            System.out.println(lista.size());
             if(lista.size() > 0) {
                 recebido = lista.get(lista.size() - 1).getRecebido();
                 if(lista.size() > 1) {
-                    antigo = lista.get(lista.size() - 2).getRecebido();
+                    anterior = lista.get(lista.size() - 2).getRecebido();
+                }
+                else {
+                    anterior = 0;
                 }
             } else {
                 System.err.println("RemessaALimento = 0");
+                recebido = 0;
             }
-            model.addRow(new String[]{listaAlimento.get(i).getNome(),
-                Float.toString(antigo), Float.toString(recebido), "0", Float.toString(listaAlimento.get(i).getTotal())});
+            model.addRow(new String[] {
+                listaAlimento.get(i).getNome(),
+                Float.toString(anterior), 
+                Float.toString(recebido), 
+                "0", 
+                Float.toString(listaAlimento.get(i).getTotal())
+            });
         }
     }
     
@@ -140,7 +153,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
             (
                 null,
                 new String [] {
-                    "Alimento", "Antigo", "Entrada", "Saida", "Novo"
+                    "Alimento", "Anterior", "Entrada", "Saida", "Saldo"
                 }
             )
             {
@@ -303,7 +316,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         if(jTableListaAlimento.getRowCount() == 0) {
             disableButton();
         } else {
-            jTableListaAlimento.setRowSelectionInterval(linhaSelecionada - 1, linhaSelecionada - 1);
+            if(linhaSelecionada > 1) {
+                jTableListaAlimento.setRowSelectionInterval(linhaSelecionada - 1, linhaSelecionada - 1);
+            } else {
+                jTableListaAlimento.setRowSelectionInterval(linhaSelecionada, linhaSelecionada);
+            }
         }
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 

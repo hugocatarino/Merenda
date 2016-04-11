@@ -9,6 +9,7 @@ import dao.AlimentoDAO;
 import dao.RemessaDAO;
 import dao.Remessa_has_AlimentoDAO;
 import java.awt.event.KeyEvent;
+import javax.swing.JFormattedTextField;
 import javax.swing.JOptionPane;
 import model.Alimento;
 import model.Remessa;
@@ -32,9 +33,30 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         this.setModal(modal);
         setLocationRelativeTo(this);
         initComponents();
-        limpaCampos();
+        iniciaCampos();
     }
     
+    private void calculaSaldo() {
+        float novo = 0;
+        novo = Float.parseFloat(jTextFieldAntigo.getText()) + Float.parseFloat(jTextFieldEntrada.getText()) 
+                - Float.parseFloat(jTextFieldSaida.getText());
+        jTextFieldNovo.setText(Float.toString(novo));
+    }
+    
+    private void iniciaCampos() {
+        limpaCampos();
+        if(principal.getAlimento() != null) {
+            jButtonBuscarAlimento.setEnabled(false);
+            jTextFieldNomeAlimento.setText(principal.getAlimento().getNome());
+            jTextFieldAntigo.setText(Float.toString(principal.getAlimento().getTotal()));
+            jFormattedTextFieldData.setEditable(true);
+            calculaSaldo();
+            jTextFieldNomeAlimento.setEditable(false);
+            jTextFieldSaida.setEditable(true);
+        }else {
+            jTextFieldNomeAlimento.setEditable(true);
+        }
+    }
     private void disableButtons() {
         jTextFieldEntrada.setEditable(false);
         jFormattedTextFieldData.setEditable(false);
@@ -230,9 +252,24 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         });
 
         jTextFieldSaida.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jTextFieldSaida.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jTextFieldSaidaFocusLost(evt);
+            }
+        });
+        jTextFieldSaida.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jTextFieldSaidaMouseClicked(evt);
+            }
+        });
         jTextFieldSaida.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldSaidaActionPerformed(evt);
+            }
+        });
+        jTextFieldSaida.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                jTextFieldSaidaKeyReleased(evt);
             }
         });
 
@@ -386,21 +423,19 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
     
     private void jTextFieldEntradaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldEntradaKeyReleased
-        int novo;
-        if(validaNumero(evt)) {
-            novo = (Integer.parseInt(jTextFieldEntrada.getText()) + Integer.parseInt(jTextFieldAntigo.getText()));
-            jTextFieldNovo.setText(Integer.toString(novo));
-        }else {
-            jTextFieldNovo.setText("0");
-            System.out.println(jFormattedTextFieldData.getText());
-            jTextFieldEntrada.setText("");
-        }
+        keyReleased(jTextFieldEntrada, evt);
     }//GEN-LAST:event_jTextFieldEntradaKeyReleased
-
-    private void jTextFieldEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldEntradaMouseClicked
-        if(jTextFieldEntrada.isEditable()) {
-            jTextFieldEntrada.setText("");
+    
+    private void mouseClicked(javax.swing.JTextField jTextField) {
+        if(jTextField.isEditable()) {
+            jTextField.setText("0");
+            calculaSaldo();
+            jTextField.setText("");
         }
+    }
+    
+    private void jTextFieldEntradaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldEntradaMouseClicked
+        mouseClicked(jTextFieldEntrada);
     }//GEN-LAST:event_jTextFieldEntradaMouseClicked
 
     private void jFormattedTextFieldDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextFieldDataActionPerformed
@@ -428,36 +463,49 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextFieldAntigoActionPerformed
 
-    private void jTextFieldAntigoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAntigoKeyReleased
-        int novo;
+    private void keyReleased(javax.swing.JTextField jTextField, java.awt.event.KeyEvent evt) {
         if(validaNumero(evt)) {
-            novo = (Integer.parseInt(jTextFieldEntrada.getText()) + Integer.parseInt(jTextFieldAntigo.getText()));
-            jTextFieldNovo.setText(Integer.toString(novo));
-        }else {
-            jTextFieldAntigo.setText("0");
-            System.out.println(jFormattedTextFieldData.getText());
-            jTextFieldAntigo.setText("");
+            calculaSaldo();
+        } else {
+            jTextField.setText("0");
+            calculaSaldo();
+            jTextField.setText("");
         }
+    }
+    
+    private void jTextFieldAntigoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldAntigoKeyReleased
+        keyReleased(jTextFieldAntigo, evt);
     }//GEN-LAST:event_jTextFieldAntigoKeyReleased
 
     private void jTextFieldAntigoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldAntigoMouseClicked
-        if(jTextFieldAntigo.isEditable()) {
-            jTextFieldAntigo.setText("");
-        }
+        mouseClicked(jTextFieldAntigo);
     }//GEN-LAST:event_jTextFieldAntigoMouseClicked
 
-    private void jTextFieldEntradaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldEntradaFocusLost
-        if(jTextFieldEntrada.getText().equals("")) {
-            jTextFieldEntrada.setText("0");
+    private void focusLost(javax.swing.JTextField jTextField) {
+        if(jTextField.getText().equals("")) {
+            jTextField.setText("0");
         }
-        
+    }
+    
+    private void jTextFieldEntradaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldEntradaFocusLost
+        focusLost(jTextFieldEntrada);
     }//GEN-LAST:event_jTextFieldEntradaFocusLost
 
     private void jTextFieldAntigoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldAntigoFocusLost
-        if(jTextFieldAntigo.getText().equals("")) {
-            jTextFieldAntigo.setText("0");
-        }
+        focusLost(jTextFieldAntigo);
     }//GEN-LAST:event_jTextFieldAntigoFocusLost
+
+    private void jTextFieldSaidaFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jTextFieldSaidaFocusLost
+        focusLost(jTextFieldSaida);
+    }//GEN-LAST:event_jTextFieldSaidaFocusLost
+
+    private void jTextFieldSaidaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextFieldSaidaMouseClicked
+        mouseClicked(jTextFieldSaida);
+    }//GEN-LAST:event_jTextFieldSaidaMouseClicked
+
+    private void jTextFieldSaidaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSaidaKeyReleased
+        keyReleased(jTextFieldSaida, evt);
+    }//GEN-LAST:event_jTextFieldSaidaKeyReleased
 
     /**
      * @param args the command line arguments

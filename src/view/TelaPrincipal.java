@@ -26,9 +26,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private ArrayList<Alimento> listaAlimento;
     private Escola escola;
     private Estoque estoque;
+    private Alimento alimento = new Alimento();
     
     private void disableButton() {
         jButtonRemover.setEnabled(false);
+        jButtonAdicionarGasto.setEnabled(false);
     }
     
     public TelaPrincipal() {
@@ -39,12 +41,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     public Escola getEscola() {
         escola = listaEscola.get(jComboBoxEscola.getSelectedIndex());
-        return escola;
+        return this.escola;
+    }
+    
+    public Alimento getAlimento() {
+        return this.alimento;
     }
     
     public Estoque getEstoque() {
         estoque = listaEstoque.get(jComboBoxEstoque.getSelectedIndex());
-        return estoque;
+        return this.estoque;
     }
     
     public void carregaEscolaDAO() {
@@ -75,10 +81,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
         for (int i = 0; i < listaAlimento.size(); i++) {
             ArrayList<Remessa_has_Alimento> lista =
                     daoRemessaAlimento.getListaRemessaAlimento(listaAlimento.get(i).getNome());
-            for (int j = 0; j < lista.size(); j++) {
+          /*  for (int j = 0; j < lista.size(); j++) {
                 System.out.println("Lista: " + lista.get(j).getIdAlimento());
             }
             System.out.println(lista.size());
+          */
             if(lista.size() > 0) {
                 recebido = lista.get(lista.size() - 1).getRecebido();
                 if(lista.size() > 1) {
@@ -120,6 +127,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTableListaAlimento = new javax.swing.JTable();
         jButtonAdicionarAlimento = new javax.swing.JButton();
         jButtonRemover = new javax.swing.JButton();
+        jButtonAdicionarGasto = new javax.swing.JButton();
         jComboBoxEscola = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -186,6 +194,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 }
             });
 
+            jButtonAdicionarGasto.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+            jButtonAdicionarGasto.setText("Adicionar Gasto");
+            jButtonAdicionarGasto.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jButtonAdicionarGastoActionPerformed(evt);
+                }
+            });
+
             javax.swing.GroupLayout jPanelEstoqueLayout = new javax.swing.GroupLayout(jPanelEstoque);
             jPanelEstoque.setLayout(jPanelEstoqueLayout);
             jPanelEstoqueLayout.setHorizontalGroup(
@@ -203,7 +219,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
                                 .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEstoqueLayout.createSequentialGroup()
                                     .addComponent(jButtonAdicionarAlimento)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jButtonAdicionarGasto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(18, 18, 18)
                                     .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addContainerGap())
             );
@@ -219,7 +237,8 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     .addGap(18, 18, 18)
                     .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonAdicionarAlimento)
-                        .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonAdicionarGasto))
                     .addGap(21, 21, 21))
             );
 
@@ -291,7 +310,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jComboBoxEscolaItemStateChanged
 
     private void jButtonAdicionarAlimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarAlimentoActionPerformed
-        
+        alimento = null;
+        disableButton();
+        jTableListaAlimento.removeRowSelectionInterval(0, jTableListaAlimento.getRowCount() - 1);
         TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
         novoAlimento.setVisible(true);
         
@@ -304,29 +325,42 @@ public class TelaPrincipal extends javax.swing.JFrame {
             limpaTableAlimento();
         }
     }//GEN-LAST:event_jComboBoxEstoqueItemStateChanged
-
+    
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         AlimentoDAO dao = new AlimentoDAO();
         int linhaSelecionada = jTableListaAlimento.getSelectedRow();
-        String alimento = listaAlimento.get(linhaSelecionada).getNome();
-        System.out.println(alimento);        
-        dao.removeAlimento(alimento);
+        String nomeAlimento = listaAlimento.get(linhaSelecionada).getNome();
+        alimento = null;
+        dao.removeAlimento(nomeAlimento);
         carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
-        System.out.println(jTableListaAlimento.getRowCount());
+        
         if(jTableListaAlimento.getRowCount() == 0) {
             disableButton();
         } else {
-            if(linhaSelecionada > 1) {
+            System.out.println(linhaSelecionada);
+            if(linhaSelecionada > 0) {
                 jTableListaAlimento.setRowSelectionInterval(linhaSelecionada - 1, linhaSelecionada - 1);
+                alimento = listaAlimento.get(linhaSelecionada - 1);
             } else {
                 jTableListaAlimento.setRowSelectionInterval(linhaSelecionada, linhaSelecionada);
+                alimento = listaAlimento.get(linhaSelecionada);
             }
         }
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
     private void jTableListaAlimentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaAlimentoMouseClicked
         jButtonRemover.setEnabled(true);
+        jButtonAdicionarGasto.setEnabled(true);
+        alimento = listaAlimento.get(jTableListaAlimento.getSelectedRow());
+        System.out.println("Alimento = " + alimento.getNome());
+        
     }//GEN-LAST:event_jTableListaAlimentoMouseClicked
+
+    private void jButtonAdicionarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarGastoActionPerformed
+        TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
+        novoAlimento.setVisible(true);
+        
+    }//GEN-LAST:event_jButtonAdicionarGastoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -368,6 +402,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdicionarAlimento;
+    private javax.swing.JButton jButtonAdicionarGasto;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonRemover;
     private javax.swing.JComboBox<String> jComboBoxEscola;

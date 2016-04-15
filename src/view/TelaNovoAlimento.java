@@ -33,6 +33,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         this.setModal(modal);
         setLocationRelativeTo(this);
         initComponents();
+        jButtonGasto.setVisible(false);
         iniciaCampos();
     }
     
@@ -46,43 +47,55 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     private void iniciaCampos() {
         limpaCampos();
         if(principal.getAlimento() != null) {
-            jButtonBuscarAlimento.setEnabled(false);
-            jTextFieldNomeAlimento.setText(principal.getAlimento().getNome());
-            jTextFieldAntigo.setText(Float.toString(principal.getAlimento().getTotal()));
-            jFormattedTextFieldData.setEditable(true);
-            calculaSaldo();
-            jTextFieldNomeAlimento.setEditable(false);
-            jTextFieldSaida.setEditable(true);
+            enableButtonsGasto(principal.getAlimento());
         }else {
-            jTextFieldNomeAlimento.setEditable(true);
+            enableButtonsAdiciona();
         }
     }
+    
     private void disableButtons() {
+        jTextFieldNomeAlimento.setEditable(false);
         jTextFieldEntrada.setEditable(false);
         jFormattedTextFieldData.setEditable(false);
         jTextFieldAntigo.setEditable(false);
         jTextFieldSaida.setEditable(false);
         jTextFieldNovo.setEditable(false);
         jButtonAdicionar.setEnabled(false);
-        jButtonCancelar.setEnabled(false);
+        jButtonGasto.setEnabled(false);
     }
     
-    private void enableButtons() {
+    private void enableButtonsAdiciona() {
+        jTextFieldNomeAlimento.setEditable(true);
+        jButtonBuscarAlimento.setEnabled(true);
+    }
+    
+    private void enableCampos() {
         jTextFieldEntrada.setEditable(true);
         jFormattedTextFieldData.setEditable(true);
         jTextFieldAntigo.setEditable(true);
-        if(jTextFieldAntigo.getText() == "0") {
-            jTextFieldAntigo.setEditable(true);
-        }
-        if(alimento.getTotal() != 0) {
-            jTextFieldSaida.setEditable(true);
-        }
+        jTextFieldAntigo.setEditable(true);
+        jTextFieldSaida.setEditable(false);
         jButtonAdicionar.setEnabled(true);
         jButtonCancelar.setEnabled(true);
     }
     
+    private void enableButtonsGasto(Alimento alimento) {
+        jTextFieldEntrada.setEditable(true);
+        jTextFieldAntigo.setEditable(false);
+        jButtonBuscarAlimento.setEnabled(false);
+        jTextFieldNomeAlimento.setText(alimento.getNome());
+        jTextFieldAntigo.setText(Float.toString(alimento.getTotal()));
+        jFormattedTextFieldData.setEditable(true);
+        calculaSaldo();
+        jTextFieldNomeAlimento.setEditable(false);
+        jTextFieldSaida.setEditable(false);
+        jButtonAdicionar.setEnabled(true);
+        jButtonGasto.setEnabled(false);
+    }
+    
     private void limpaCampos() {
         jTextFieldNomeAlimento.setText("");
+        jFormattedTextFieldData.setText("");
         jTextFieldAntigo.setText("0");
         jTextFieldNovo.setText("0");
         jTextFieldEntrada.setText("0");
@@ -189,6 +202,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         jLabelData = new javax.swing.JLabel();
         jFormattedTextFieldData = new javax.swing.JFormattedTextField();
         jButtonBuscarAlimento = new javax.swing.JButton();
+        jButtonGasto = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -283,7 +297,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
         jTextFieldNomeAlimento.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
 
         jButtonAdicionar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-        jButtonAdicionar.setText("Adicionar");
+        jButtonAdicionar.setText("Adicionar Alimento");
         jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAdicionarActionPerformed(evt);
@@ -321,6 +335,9 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
             }
         });
 
+        jButtonGasto.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+        jButtonGasto.setText("Adicionar Gasto");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -328,10 +345,6 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButtonAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(39, 39, 39)
-                        .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabelNomeAlimento)
                         .addGap(18, 18, 18)
@@ -344,21 +357,30 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
                             .addGap(31, 31, 31)
                             .addComponent(jButtonBuscarAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabelEntrada)
-                                .addComponent(jLabelData))
-                            .addGap(18, 18, 18)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jFormattedTextFieldData, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
-                                .addComponent(jTextFieldEntrada))
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabelAntigo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jTextFieldAntigo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(18, 18, 18)
-                            .addComponent(jLabelNovo)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabelEntrada)
+                                        .addComponent(jLabelData))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jFormattedTextFieldData, javax.swing.GroupLayout.DEFAULT_SIZE, 95, Short.MAX_VALUE)
+                                        .addComponent(jTextFieldEntrada)))
+                                .addComponent(jButtonAdicionar, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addComponent(jTextFieldNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jButtonGasto, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(28, 28, 28)
+                                    .addComponent(jButtonCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jLabelAntigo, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextFieldAntigo, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGap(18, 18, 18)
+                                    .addComponent(jLabelNovo)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(jTextFieldNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -386,7 +408,8 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonAdicionar)
-                    .addComponent(jButtonCancelar))
+                    .addComponent(jButtonCancelar)
+                    .addComponent(jButtonGasto))
                 .addGap(3, 3, 3))
         );
 
@@ -410,15 +433,17 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
             
             adicionaAlimento();
             
-            if(!jTextFieldAntigo.getText().equals("0")) {
-                adicionaRemessa(Float.parseFloat(jTextFieldAntigo.getText()));
+            if(jTextFieldAntigo.isEditable()) {
+                if(!jTextFieldAntigo.getText().equals("0")) {
+                    adicionaRemessa(Float.parseFloat(jTextFieldAntigo.getText()));
+                }
             }
             adicionaRemessa(Float.parseFloat(jTextFieldEntrada.getText()));
             
             principal.carregaAlimentoDAO(principal.getEstoque().getIdEstoque());
-            this.dispose();
+            
        }
-           
+           iniciaCampos();
        
     }//GEN-LAST:event_jButtonAdicionarActionPerformed
     
@@ -449,8 +474,10 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
             alimento = dao.buscaAlimento(nome);
             System.out.println(alimento.getNome());
             if(alimento.getNome() == null) {
-                enableButtons();
+                enableCampos();
                 alimento.setNome(nome);
+            } else {
+                enableButtonsGasto(alimento);
             }
         }
     }//GEN-LAST:event_jButtonBuscarAlimentoActionPerformed
@@ -554,6 +581,7 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonBuscarAlimento;
     private javax.swing.JButton jButtonCancelar;
+    private javax.swing.JButton jButtonGasto;
     private javax.swing.JFormattedTextField jFormattedTextFieldData;
     private javax.swing.JLabel jLabelAntigo;
     private javax.swing.JLabel jLabelData;

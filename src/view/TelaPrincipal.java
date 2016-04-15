@@ -8,6 +8,7 @@ package view;
 import dao.AlimentoDAO;
 import dao.EscolaDAO;
 import dao.EstoqueDAO;
+import dao.GastoDAO;
 import dao.Remessa_has_AlimentoDAO;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -30,7 +31,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     private void disableButton() {
         jButtonRemover.setEnabled(false);
-        jButtonAdicionarGasto.setEnabled(false);
+        jButtonAdicionarRemessa.setEnabled(false);
     }
     
     public TelaPrincipal() {
@@ -71,6 +72,16 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
     
+    public void carregaAlimentoComboBox(int idEstoque) {
+        AlimentoDAO dao = new AlimentoDAO();
+        listaAlimento = dao.getAllAlimentoEstoque(idEstoque);
+        jComboBoxAlimentoRemessa.removeAllItems();
+        for(int i = 0; i < listaAlimento.size(); i++) {
+            jComboBoxAlimentoRemessa.addItem(listaAlimento.get(i).getNome());
+        }
+        
+    }
+    
     public void carregaAlimentoDAO(int idEstoque) {
         DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
         AlimentoDAO dao = new AlimentoDAO();
@@ -87,13 +98,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
             System.out.println(lista.size());
           */
             if(lista.size() > 0) {
+                anterior = 0;
+                for( int j = 0; j < lista.size() - 1; j++) {
+                    anterior = anterior + lista.get(j).getRecebido();
+                }
                 recebido = lista.get(lista.size() - 1).getRecebido();
-                if(lista.size() > 1) {
-                    anterior = lista.get(lista.size() - 2).getRecebido();
-                }
-                else {
-                    anterior = 0;
-                }
             } else {
                 System.err.println("RemessaALimento = 0");
                 recebido = 0;
@@ -108,18 +117,44 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }
     
+    public void tableRemessa(DefaultTableModel model, ArrayList<Remessa_has_Alimento> lista) {
+        model.setRowCount(0);
+        for (int i = 0; i < lista.size(); i++) {
+            model.addRow(new String[] {
+                Integer.toString(i + 1),
+                lista.get(i).getIdAlimento(),
+                lista.get(i).getDateRemessa(),
+                Float.toString(lista.get(i).getRecebido())
+            });
+        }
+    }
+    
+    public void carregaRemessaTable(String idAlimento) {
+        DefaultTableModel model = (DefaultTableModel) jTableRemessa.getModel();
+        Remessa_has_AlimentoDAO dao = new Remessa_has_AlimentoDAO();
+        ArrayList<Remessa_has_Alimento> lista = new ArrayList<Remessa_has_Alimento>();
+        lista = dao.getListaRemessaAlimento(idAlimento);
+        tableRemessa(model, lista);
+        
+        
+    }
+    
     public void limpaTableAlimento() {
         DefaultTableModel model = (DefaultTableModel) jTableListaAlimento.getModel();
         model.setRowCount(0);
     }
     
+    public void limpaTableRemessa() {
+        DefaultTableModel model = (DefaultTableModel) jTableRemessa.getModel();
+        model.setRowCount(0);
+    }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         jLabelEscola = new javax.swing.JLabel();
         jButtonBuscar = new javax.swing.JButton();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jTabbedPaneAlimento = new javax.swing.JTabbedPane();
         jPanelEstoque = new javax.swing.JPanel();
         jLabelEstoque = new javax.swing.JLabel();
         jComboBoxEstoque = new javax.swing.JComboBox<>();
@@ -127,7 +162,14 @@ public class TelaPrincipal extends javax.swing.JFrame {
         jTableListaAlimento = new javax.swing.JTable();
         jButtonAdicionarAlimento = new javax.swing.JButton();
         jButtonRemover = new javax.swing.JButton();
-        jButtonAdicionarGasto = new javax.swing.JButton();
+        jButtonAdicionarRemessa = new javax.swing.JButton();
+        jPanelRemessa = new javax.swing.JPanel();
+        jComboBoxAlimentoRemessa = new javax.swing.JComboBox<>();
+        jLabelAlimento = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableRemessa = new javax.swing.JTable();
+        jPanelMapaMerenda = new javax.swing.JPanel();
+        jButtonAdicionar = new javax.swing.JButton();
         jComboBoxEscola = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -194,11 +236,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
                 }
             });
 
-            jButtonAdicionarGasto.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
-            jButtonAdicionarGasto.setText("Adicionar Gasto");
-            jButtonAdicionarGasto.addActionListener(new java.awt.event.ActionListener() {
+            jButtonAdicionarRemessa.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+            jButtonAdicionarRemessa.setText("Adicionar Remessa");
+            jButtonAdicionarRemessa.addActionListener(new java.awt.event.ActionListener() {
                 public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jButtonAdicionarGastoActionPerformed(evt);
+                    jButtonAdicionarRemessaActionPerformed(evt);
                 }
             });
 
@@ -214,15 +256,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(jComboBoxEstoque, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEstoqueLayout.createSequentialGroup()
-                            .addGap(0, 18, Short.MAX_VALUE)
-                            .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jScrollPaneListaAlimento, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelEstoqueLayout.createSequentialGroup()
-                                    .addComponent(jButtonAdicionarAlimento)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jButtonAdicionarGasto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addComponent(jButtonAdicionarAlimento)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                            .addComponent(jButtonAdicionarRemessa)
+                            .addGap(33, 33, 33)
+                            .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jScrollPaneListaAlimento))
                     .addContainerGap())
             );
             jPanelEstoqueLayout.setVerticalGroup(
@@ -238,56 +277,137 @@ public class TelaPrincipal extends javax.swing.JFrame {
                     .addGroup(jPanelEstoqueLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonAdicionarAlimento)
                         .addComponent(jButtonRemover, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonAdicionarGasto))
-                    .addGap(21, 21, 21))
-            );
-
-            jTabbedPane1.addTab("Estoque", jPanelEstoque);
-
-            jComboBoxEscola.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-            jComboBoxEscola.addItemListener(new java.awt.event.ItemListener() {
-                public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                    jComboBoxEscolaItemStateChanged(evt);
-                }
-            });
-            jComboBoxEscola.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    jComboBoxEscolaActionPerformed(evt);
-                }
-            });
-
-            javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-            getContentPane().setLayout(layout);
-            layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTabbedPane1)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jButtonBuscar)
-                            .addGap(0, 0, Short.MAX_VALUE))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabelEscola, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jComboBoxEscola, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jButtonAdicionarRemessa))
                     .addContainerGap())
             );
-            layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                    .addContainerGap()
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelEscola, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jComboBoxEscola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGap(18, 18, 18)
-                    .addComponent(jButtonBuscar)
-                    .addGap(18, 18, 18)
-                    .addComponent(jTabbedPane1))
-            );
 
-            pack();
-        }// </editor-fold>//GEN-END:initComponents
+            jTabbedPaneAlimento.addTab("Estoque", jPanelEstoque);
+
+            jComboBoxAlimentoRemessa.addItemListener(new java.awt.event.ItemListener() {
+                public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                    jComboBoxAlimentoRemessaItemStateChanged(evt);
+                }
+            });
+            jComboBoxAlimentoRemessa.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    jComboBoxAlimentoRemessaActionPerformed(evt);
+                }
+            });
+
+            jLabelAlimento.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+            jLabelAlimento.setText("Alimento:");
+
+            jTableRemessa.setModel(new javax.swing.table.DefaultTableModel
+                (
+                    null,
+                    new String [] {
+                        "", "Alimento", "Data", "Valor"
+                    }
+                )
+                {
+                    @Override
+                    public boolean isCellEditable(int rowIndex, int mColIndex) {
+                        return false;
+                    }
+                });
+                jScrollPane1.setViewportView(jTableRemessa);
+
+                javax.swing.GroupLayout jPanelRemessaLayout = new javax.swing.GroupLayout(jPanelRemessa);
+                jPanelRemessa.setLayout(jPanelRemessaLayout);
+                jPanelRemessaLayout.setHorizontalGroup(
+                    jPanelRemessaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRemessaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanelRemessaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1)
+                            .addGroup(jPanelRemessaLayout.createSequentialGroup()
+                                .addComponent(jLabelAlimento)
+                                .addGap(18, 18, 18)
+                                .addComponent(jComboBoxAlimentoRemessa, javax.swing.GroupLayout.PREFERRED_SIZE, 401, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                );
+                jPanelRemessaLayout.setVerticalGroup(
+                    jPanelRemessaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelRemessaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanelRemessaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jComboBoxAlimentoRemessa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelAlimento))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                        .addContainerGap())
+                );
+
+                jTabbedPaneAlimento.addTab("Remessa", jPanelRemessa);
+
+                jButtonAdicionar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
+                jButtonAdicionar.setText("Adicionar");
+
+                javax.swing.GroupLayout jPanelMapaMerendaLayout = new javax.swing.GroupLayout(jPanelMapaMerenda);
+                jPanelMapaMerenda.setLayout(jPanelMapaMerendaLayout);
+                jPanelMapaMerendaLayout.setHorizontalGroup(
+                    jPanelMapaMerendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelMapaMerendaLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jButtonAdicionar)
+                        .addContainerGap(411, Short.MAX_VALUE))
+                );
+                jPanelMapaMerendaLayout.setVerticalGroup(
+                    jPanelMapaMerendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelMapaMerendaLayout.createSequentialGroup()
+                        .addContainerGap(236, Short.MAX_VALUE)
+                        .addComponent(jButtonAdicionar)
+                        .addContainerGap())
+                );
+
+                jTabbedPaneAlimento.addTab("Mapa da Merenda", jPanelMapaMerenda);
+
+                jComboBoxEscola.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+                jComboBoxEscola.addItemListener(new java.awt.event.ItemListener() {
+                    public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                        jComboBoxEscolaItemStateChanged(evt);
+                    }
+                });
+                jComboBoxEscola.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jComboBoxEscolaActionPerformed(evt);
+                    }
+                });
+
+                javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+                getContentPane().setLayout(layout);
+                layout.setHorizontalGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTabbedPaneAlimento)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButtonBuscar)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabelEscola, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxEscola, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())
+                );
+                layout.setVerticalGroup(
+                    layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabelEscola, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jComboBoxEscola, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addComponent(jButtonBuscar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTabbedPaneAlimento)
+                        .addContainerGap())
+                );
+
+                pack();
+            }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBuscarActionPerformed
         // TODO add your handling code here:
@@ -298,10 +418,6 @@ public class TelaPrincipal extends javax.swing.JFrame {
         
     }//GEN-LAST:event_jComboBoxEscolaActionPerformed
 
-    private void jComboBoxEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEstoqueActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBoxEstoqueActionPerformed
-
     private void jComboBoxEscolaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEscolaItemStateChanged
         // TODO add your handling code here:
         if(listaEscola.get(jComboBoxEscola.getSelectedIndex()) != null)
@@ -309,23 +425,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
     
     }//GEN-LAST:event_jComboBoxEscolaItemStateChanged
 
-    private void jButtonAdicionarAlimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarAlimentoActionPerformed
-        alimento = null;
-        disableButton();
-        jTableListaAlimento.removeRowSelectionInterval(0, jTableListaAlimento.getRowCount() - 1);
+    private void jButtonAdicionarRemessaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarRemessaActionPerformed
         TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
         novoAlimento.setVisible(true);
-        
-    }//GEN-LAST:event_jButtonAdicionarAlimentoActionPerformed
+    }//GEN-LAST:event_jButtonAdicionarRemessaActionPerformed
 
-    private void jComboBoxEstoqueItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstoqueItemStateChanged
-        if(jComboBoxEstoque.getSelectedIndex() != -1)
-            carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
-        else {
-            limpaTableAlimento();
-        }
-    }//GEN-LAST:event_jComboBoxEstoqueItemStateChanged
-    
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
         AlimentoDAO dao = new AlimentoDAO();
         int linhaSelecionada = jTableListaAlimento.getSelectedRow();
@@ -333,7 +437,7 @@ public class TelaPrincipal extends javax.swing.JFrame {
         alimento = null;
         dao.removeAlimento(nomeAlimento);
         carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
-        
+
         if(jTableListaAlimento.getRowCount() == 0) {
             disableButton();
         } else {
@@ -348,20 +452,54 @@ public class TelaPrincipal extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButtonRemoverActionPerformed
 
-    private void jTableListaAlimentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaAlimentoMouseClicked
-        jButtonRemover.setEnabled(true);
-        jButtonAdicionarGasto.setEnabled(true);
-        alimento = listaAlimento.get(jTableListaAlimento.getSelectedRow());
-        System.out.println("Alimento = " + alimento.getNome());
-        
-    }//GEN-LAST:event_jTableListaAlimentoMouseClicked
-
-    private void jButtonAdicionarGastoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarGastoActionPerformed
+    private void jButtonAdicionarAlimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarAlimentoActionPerformed
+        alimento = null;
+        disableButton();
+        jTableListaAlimento.removeRowSelectionInterval(0, jTableListaAlimento.getRowCount() - 1);
         TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
         novoAlimento.setVisible(true);
-        
-    }//GEN-LAST:event_jButtonAdicionarGastoActionPerformed
+    }//GEN-LAST:event_jButtonAdicionarAlimentoActionPerformed
 
+    private void jTableListaAlimentoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTableListaAlimentoMouseClicked
+        int selectedIndex = jTableListaAlimento.getSelectedRow();
+        jButtonRemover.setEnabled(true);
+        jButtonAdicionarRemessa.setEnabled(true);
+        alimento = listaAlimento.get(selectedIndex);
+        System.out.println("Alimento = " + alimento.getNome());
+        jComboBoxAlimentoRemessa.setSelectedIndex(selectedIndex);
+    }//GEN-LAST:event_jTableListaAlimentoMouseClicked
+
+    private void jComboBoxEstoqueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxEstoqueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxEstoqueActionPerformed
+
+    private void jComboBoxEstoqueItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxEstoqueItemStateChanged
+        if(jComboBoxEstoque.getSelectedIndex() != -1) {
+            int idEstoque = listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque();
+            carregaAlimentoDAO(idEstoque);
+            carregaAlimentoComboBox(idEstoque);
+        } else {
+            limpaTableAlimento();
+        }
+    }//GEN-LAST:event_jComboBoxEstoqueItemStateChanged
+
+    private void jComboBoxAlimentoRemessaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxAlimentoRemessaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBoxAlimentoRemessaActionPerformed
+
+    private void jComboBoxAlimentoRemessaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBoxAlimentoRemessaItemStateChanged
+        int linhaSelecionada = jComboBoxAlimentoRemessa.getSelectedIndex();
+        if(linhaSelecionada >= 0) {
+            String idAlimento = jComboBoxAlimentoRemessa.getSelectedItem().toString();
+            carregaRemessaTable(idAlimento);
+            if(linhaSelecionada >= 0) {
+                jTableListaAlimento.setRowSelectionInterval(linhaSelecionada, linhaSelecionada);
+            }
+        } else {
+            limpaTableRemessa();
+        }
+    }//GEN-LAST:event_jComboBoxAlimentoRemessaItemStateChanged
+    
     /**
      * @param args the command line arguments
      */
@@ -401,18 +539,25 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonAdicionar;
     private javax.swing.JButton jButtonAdicionarAlimento;
-    private javax.swing.JButton jButtonAdicionarGasto;
+    private javax.swing.JButton jButtonAdicionarRemessa;
     private javax.swing.JButton jButtonBuscar;
     private javax.swing.JButton jButtonRemover;
+    private javax.swing.JComboBox<String> jComboBoxAlimentoRemessa;
     private javax.swing.JComboBox<String> jComboBoxEscola;
     private javax.swing.JComboBox<String> jComboBoxEstoque;
+    private javax.swing.JLabel jLabelAlimento;
     private javax.swing.JLabel jLabelEscola;
     private javax.swing.JLabel jLabelEstoque;
     private javax.swing.JPanel jPanelEstoque;
+    private javax.swing.JPanel jPanelMapaMerenda;
+    private javax.swing.JPanel jPanelRemessa;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneListaAlimento;
-    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTabbedPane jTabbedPaneAlimento;
     private javax.swing.JTable jTableListaAlimento;
+    private javax.swing.JTable jTableRemessa;
     // End of variables declaration//GEN-END:variables
 
     

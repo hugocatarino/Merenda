@@ -56,6 +56,25 @@ public class GastoDAO {
 		}
 	}
 	
+        public Gasto GetGastoAlimento(String idAlimento) {
+                try {
+                        Gasto gasto = new Gasto();
+                        String sql = "SELECT * FROM `Merenda`.`Gasto` WHERE Alimento_idAlimento = ?";
+                        PreparedStatement stmt = this.conexao.prepareStatement(sql);
+                        stmt.setString(1, idAlimento);
+                        ResultSet rs = stmt.executeQuery();
+                        gasto.setIdAlimento(rs.getString("Alimento_idAlimento"));
+                        gasto.setIdGasto(rs.getInt("idGasto"));
+                        gasto.setIdMapa_Merenda(rs.getInt("Mapa_Merenda_idMapa_Merenda"));
+                        gasto.setPeso(rs.getFloat("peso"));
+                        return gasto;
+                        
+                } catch(SQLException sqlException) {
+                        System.err.println(sqlException + "Erro ao pegar o gasto do alimento" + idAlimento);
+                        return null;
+                }
+        }
+        
 	public Gasto GetLastGasto() {
 		Gasto gasto = new Gasto();
 		try {

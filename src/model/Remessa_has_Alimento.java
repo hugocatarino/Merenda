@@ -8,6 +8,8 @@ public class Remessa_has_Alimento {
 	private int quantidade;
 	private int falta;
 	private float recebido;
+        private String dateRemessa;
+        private String nomeRemessa;
 
 	public int getIdRemessa() {
 		return idRemessa;
@@ -51,5 +53,16 @@ public class Remessa_has_Alimento {
 	public void setRecebido(float recebido) {
 		this.recebido = recebido;
 	}
-
+        public String getDateRemessa() {
+                return dateRemessa;
+        }
+        public void setDateRemessa(String dateRemessa) {
+                this.dateRemessa = dateRemessa;
+        }
+        public String getNomeRemessa() {
+                return nomeRemessa;
+        }
+        public void setNomeRemessa(String nomeRemessa) {
+                this.nomeRemessa = nomeRemessa;
+        }
 }

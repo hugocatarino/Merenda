@@ -75,6 +75,27 @@ public class RemessaDAO {
 		}
 		return remessa;
 	}
+        
+        public Remessa getRemessa(int idRemessa) {
+		Remessa remessa = new Remessa();
+		try {
+			String sql = "SELECT idRemessa, Estoque_idEstoque, nome, date FROM `Merenda`.`Remessa` WHERE idRemessa = ?";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+                        stmt.setInt(1, idRemessa);
+			ResultSet rs = stmt.executeQuery();
+			if(rs.next()) {
+				remessa.setIdRemessa(rs.getInt("idRemessa"));
+				remessa.setIdEstoque(rs.getInt("Estoque_idEstoque"));
+				remessa.setNome(rs.getString("nome"));
+				remessa.setDate(rs.getString("date"));
+			}
+			rs.close();
+			stmt.close();
+		} catch (SQLException sqlException) {
+			System.err.println(sqlException + "Erro ao pegar a ultima remessa!");
+		}
+		return remessa;
+	}
 
 
 }

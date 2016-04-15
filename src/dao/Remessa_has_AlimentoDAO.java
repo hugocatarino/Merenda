@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Remessa;
 
 import model.Remessa_has_Alimento;
 
@@ -98,7 +99,10 @@ public class Remessa_has_AlimentoDAO {
                 ArrayList<Remessa_has_Alimento> listaRemessaAlimento = new ArrayList<Remessa_has_Alimento>();
                 Remessa_has_Alimento remessaAlimento;
                 try {
-			String sql = "SELECT * FROM `Merenda`.`Remessa_has_Alimento` WHERE Alimento_nome = ?";
+			RemessaDAO dao = new RemessaDAO();
+                        Remessa remessa;
+                        String sql = "SELECT * FROM `Merenda`.`Remessa_has_Alimento` WHERE Alimento_nome = ?";
+                        String sql2 = "SELECT nome, date FROM `Merenda`.`Remessa` WHERE idRemessa = ?";
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
                         stmt.setString(1, nomeAlimento);
 			ResultSet rs = stmt.executeQuery();
@@ -111,12 +115,16 @@ public class Remessa_has_AlimentoDAO {
 				remessaAlimento.setQuantidade(rs.getInt("quantidade"));
 				remessaAlimento.setRecebido(rs.getFloat("recebido"));
 				remessaAlimento.setTipo(rs.getInt("tipo"));
+                                remessa = dao.getRemessa(remessaAlimento.getIdRemessa());
+                                remessaAlimento.setDateRemessa(remessa.getDate());
+                                remessaAlimento.setNomeRemessa(remessa.getNome());
                                 listaRemessaAlimento.add(remessaAlimento);
 			}
 			rs.close();
 			stmt.close();
+                        
 		} catch(SQLException sqlException) {
-			System.err.println(sqlException + "erro ao pegar a Lista de RemessaAlimento!");
+			System.err.println(sqlException + " Erro ao pegar a Lista de RemessaAlimento!");
 		}
                 return listaRemessaAlimento;
         }

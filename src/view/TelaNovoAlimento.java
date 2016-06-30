@@ -321,6 +321,11 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
             ex.printStackTrace();
         }
         jFormattedTextFieldData.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
+        jFormattedTextFieldData.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jFormattedTextFieldDataMouseClicked(evt);
+            }
+        });
         jFormattedTextFieldData.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jFormattedTextFieldDataActionPerformed(evt);
@@ -533,6 +538,10 @@ public class TelaNovoAlimento extends javax.swing.JDialog {
     private void jTextFieldSaidaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldSaidaKeyReleased
         keyReleased(jTextFieldSaida, evt);
     }//GEN-LAST:event_jTextFieldSaidaKeyReleased
+
+    private void jFormattedTextFieldDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jFormattedTextFieldDataMouseClicked
+        jFormattedTextFieldData.setText("");
+    }//GEN-LAST:event_jFormattedTextFieldDataMouseClicked
 
     /**
      * @param args the command line arguments

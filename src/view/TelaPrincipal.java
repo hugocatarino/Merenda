@@ -9,6 +9,7 @@ import dao.AlimentoDAO;
 import dao.EscolaDAO;
 import dao.EstoqueDAO;
 import dao.GastoDAO;
+import dao.RemessaDAO;
 import dao.Remessa_has_AlimentoDAO;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
@@ -343,6 +344,11 @@ public class TelaPrincipal extends javax.swing.JFrame {
 
                 jButtonAdicionar.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
                 jButtonAdicionar.setText("Adicionar");
+                jButtonAdicionar.addActionListener(new java.awt.event.ActionListener() {
+                    public void actionPerformed(java.awt.event.ActionEvent evt) {
+                        jButtonAdicionarActionPerformed(evt);
+                    }
+                });
 
                 javax.swing.GroupLayout jPanelMapaMerendaLayout = new javax.swing.GroupLayout(jPanelMapaMerenda);
                 jPanelMapaMerenda.setLayout(jPanelMapaMerendaLayout);
@@ -431,11 +437,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonAdicionarRemessaActionPerformed
 
     private void jButtonRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoverActionPerformed
-        AlimentoDAO dao = new AlimentoDAO();
+        AlimentoDAO daoAlimento = new AlimentoDAO();
+        RemessaDAO daoRemessa = new RemessaDAO();
         int linhaSelecionada = jTableListaAlimento.getSelectedRow();
         String nomeAlimento = listaAlimento.get(linhaSelecionada).getNome();
         alimento = null;
-        dao.removeAlimento(nomeAlimento);
+        daoAlimento.removeAlimento(nomeAlimento);
         carregaAlimentoDAO(listaEstoque.get(jComboBoxEstoque.getSelectedIndex()).getIdEstoque());
 
         if(jTableListaAlimento.getRowCount() == 0) {
@@ -455,7 +462,9 @@ public class TelaPrincipal extends javax.swing.JFrame {
     private void jButtonAdicionarAlimentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarAlimentoActionPerformed
         alimento = null;
         disableButton();
-        jTableListaAlimento.removeRowSelectionInterval(0, jTableListaAlimento.getRowCount() - 1);
+        if(jTableListaAlimento.getRowCount() != 0) {
+            jTableListaAlimento.removeRowSelectionInterval(0, jTableListaAlimento.getRowCount() - 1);
+        }
         TelaNovoAlimento novoAlimento = new TelaNovoAlimento(this,true);
         novoAlimento.setVisible(true);
     }//GEN-LAST:event_jButtonAdicionarAlimentoActionPerformed
@@ -499,6 +508,12 @@ public class TelaPrincipal extends javax.swing.JFrame {
             limpaTableRemessa();
         }
     }//GEN-LAST:event_jComboBoxAlimentoRemessaItemStateChanged
+
+    private void jButtonAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAdicionarActionPerformed
+        TelaNovoMapaMerenda novoMapaMerenda = new TelaNovoMapaMerenda(this, rootPaneCheckingEnabled);
+        novoMapaMerenda.setVisible(true);
+                
+    }//GEN-LAST:event_jButtonAdicionarActionPerformed
     
     /**
      * @param args the command line arguments

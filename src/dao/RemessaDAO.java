@@ -56,6 +56,25 @@ public class RemessaDAO {
 		}
 	}
 	
+        public void removeRemessaAlimento(String alimento) {
+		try {
+			String sql = "DELETE FROM `Merenda`.`Remessa` WHERE Alimento_nome = ?";
+			String sql2 = "ALTER TABLE `Merenda`.`Remessa` AUTO_INCREMENT = 1";
+			PreparedStatement stmt = this.conexao.prepareStatement(sql);
+			Remessa_has_AlimentoDAO dao = new Remessa_has_AlimentoDAO();
+			dao.removeIdAlimentoRemessa_has_Alimento(alimento);
+			stmt.setString(1, alimento);
+			stmt.execute();
+                        stmt.close();
+                        stmt = this.conexao.prepareStatement(sql2);
+                        stmt.execute();
+                        stmt.close();
+//			System.out.println("Remessa removida com sucesso!");
+		} catch (SQLException sqlException) {
+			System.err.println(sqlException + "Erro ao remover remessa");
+		}
+	}
+        
 	public Remessa getLastRemessa() {
 		Remessa remessa = new Remessa();
 		try {

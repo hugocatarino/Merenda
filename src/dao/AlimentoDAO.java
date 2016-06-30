@@ -38,7 +38,6 @@ public class AlimentoDAO {
 			PreparedStatement stmt = this.conexao.prepareStatement(sql);
 			Remessa_has_AlimentoDAO daoRemessaAlimento = new Remessa_has_AlimentoDAO();
 			daoRemessaAlimento.removeIdAlimentoRemessa_has_Alimento(nomeAlimento);
-                        RemessaDAO daoRemessa = new RemessaDAO();
 			stmt.setString(1, nomeAlimento);
 			stmt.execute();
 			stmt.close();
